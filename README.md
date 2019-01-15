@@ -1,7 +1,7 @@
 # CSC 307 Group Project: Team VII
 ## Team Pizza Topping: American Bacon
 
-Team Lead (tentative): Reed Bowling
+Team Lead (for now?): Reed Bowling
 
 Database Lead: Spencer Gilson
 
