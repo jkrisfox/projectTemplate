@@ -6,3 +6,7 @@ Team Lead (for now?): Reed Bowling
 Database Lead: Spencer Gilson
 
 Architect: Brent Lee
+
+UI: Dylan Gross
+
+Testing: Michael Silin
