@@ -1,14 +1,13 @@
 import { Router } from "express";
 import { Connection } from "typeorm";
+import { DBConnection } from "../connection";
 
 export default abstract class DefaultController {
   public router: Router;
 
-  constructor(connection: Connection) {
-    this.router = this.initializeRoutes(connection);
-
+  constructor() {
+    this.router = this.initializeRoutes();
   }
 
-  protected abstract initializeRoutes(connection: Connection): Router;
-
+  protected abstract initializeRoutes(): Router;
 }
