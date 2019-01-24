@@ -1,19 +1,15 @@
 import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import User from "./user.entity";
+import { User } from "./user.entity";
 
 @Entity()
-export default class Session {
+export class Session {
   @PrimaryGeneratedColumn()
   public id!: number;
 
   @Column()
   public expiresAt!: Date;
 
-  @Index({unique: true})
-  @Column()
-  public userId!: number;
-
-  @OneToOne((type) => User)
+  @OneToOne((type) => User, {cascade: true})
   @JoinColumn()
   public user!: User;
 }

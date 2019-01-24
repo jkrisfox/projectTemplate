@@ -1,38 +1,29 @@
-import express, { Request, Response } from "express";
-import { getConnectionOptions, createConnection } from "typeorm";
+import express from "express";
+import { LoginController, UserController } from "./controller";
 
-import connectionConfig from "./config.json";
+import { DBConnection } from "./connection";
 
-import { UserController, LoginController } from "./controller";
-
-export default class Server {
-  private app: Promise<express.Application>;
+export class Server {
+  private myApp: Promise<express.Application>;
   constructor() {
-    this.app = this.buildServer();
+    this.myApp = this.buildServer();
   }
-  buildServer(): Promise<express.Application> {
-    return getConnectionOptions().then(options => {
-      const _options = { ...options };
-      Object.assign(
-        _options,
-        (<any>connectionConfig)[process.env.NODE_ENV || "dev"]
-      );
-      return createConnection(_options).then(connection => {
-        const app: express.Application = express();
+  public getMyApp(): Promise<express.Application> {
+    return this.myApp;
+  }
+  protected buildServer(): Promise<express.Application> {
+    return DBConnection.getConnection().then(() => {
+      const app: express.Application = express();
 
-        app.use("/", (req: Request, res: Response) => {
-          res.send("hello");
-        });
+      app.use(express.json());
 
-        app.use(new UserController(connection).router);
-        app.use(new LoginController(connection).router);
+      app.use("/", new UserController().router);
+      app.use("/", new LoginController().router);
 
-        return app;
-      });
+      return app;
     });
   }
 
-  get appPromise() {
-    return this.app;
-  }
 }
+
+export default Server;
