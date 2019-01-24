@@ -1,18 +1,18 @@
 import DefaultController from "./default.controller";
 
 import express, { Request, Response } from "express";
-import { Connection, getConnection } from "typeorm";
+import { getRepository } from "typeorm";
 
-import Session from "../entity/session.entity";
-import User from "../entity/user.entity";
+import { Session, User } from "../entity";
 
 export class LoginController extends DefaultController {
-  protected initializeRoutes(connection: Connection): express.Router {
+  protected initializeRoutes(): express.Router {
     const router = express.Router();
-    const userRepo = connection.getRepository(User);
-    const sessionRepo = connection.getRepository(Session);
+
     router.route("/login").post((req: Request, res: Response) => {
       const { emailAddress, password } = req.body;
+      const userRepo = getRepository(User);
+      const sessionRepo = getRepository(Session);
       userRepo
         .findOne({ where: { emailAddress } })
         .then((user: User | undefined) => {
@@ -27,7 +27,7 @@ export class LoginController extends DefaultController {
                 }
                 session.expiresAt = expiry;
                 sessionRepo.save(session).then((updatedSession) => {
-                  res.status(200).send({ token: updatedSession.id});
+                  res.status(200).send({ token: updatedSession.id });
                 });
               });
           } else {
@@ -35,7 +35,7 @@ export class LoginController extends DefaultController {
               .status(401)
               .send({ error: "can't find user with that username or password" });
           }
-        });
+      });
     });
     return router;
   }

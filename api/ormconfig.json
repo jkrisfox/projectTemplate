@@ -10,5 +10,8 @@
   ],
   "subscribers": [
     "subscriber/**/*.ts"
-  ]
+  ],
+  "cli": {
+    "migrationsDir": "migration"
+  }
 }
