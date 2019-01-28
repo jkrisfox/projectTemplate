@@ -7,8 +7,7 @@ export default class ServerConfig {
     if (ServerConfig.server) {
       return ServerConfig.server;
     } else {
-      ServerConfig.server = new Server().appPromise;
-      return ServerConfig.server;
+      return new Server().getMyApp();
     }
   }
 
