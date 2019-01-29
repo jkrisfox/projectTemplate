@@ -5,6 +5,9 @@
         <div class="navbar-start">
           <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link> 
           <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
+          <!-- wait... what is this??? -->
+          <!-- we got our todo, theres the path... it matches the path in router.ts -->
+          <router-link class="navbar-item is-tab" to="/todos" exact-active-class="is-active">My ToDos</router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -20,7 +23,9 @@
         </div>
       </div>
     </div>
+    <!-- router view is telling the thing what to do in the view???? -->
     <router-view/>
+    <!-- these are the 2 things.... modals??? -->
     <Signup v-bind:is-showing="showSignup" v-on:success="successSignup()" v-on:cancel="cancelSignup()"/>
     <Login v-bind:is-showing="showLogin" v-on:success="successLogin()" v-on:cancel="cancelLogin()"/>
   </div>
@@ -29,6 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+//  importing the modals???????
 import Signup from "@/components/Signup.vue";
 import Login from "@/components/Login.vue";
 
