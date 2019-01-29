@@ -29,7 +29,7 @@ export class UserController extends DefaultController {
             res.status(200).send({ user });
           },
           (reason: any) => {
-            res.status(500).send({ reason });
+            res.status(500).send({ reason: "The email was not unique" });
           },
         );
       });
