@@ -21,25 +21,19 @@
       </div>
     </div>
     <router-view/>
-    <Modal v-bind:is-showing="showSignup" title="Signup" v-on:success="successSignup()" v-on:cancel="cancelSignup()">
-      <Signup/>
-    </Modal>
-    <Modal v-bind:is-showing="showLogin" title="Login" v-on:success="successLogin()" v-on:cancel="cancelLogin()">
-      <Login/>
-    </Modal>
+    <Signup v-bind:is-showing="showSignup" v-on:success="successSignup()" v-on:cancel="cancelSignup()"/>
+    <Login v-bind:is-showing="showLogin" v-on:success="successLogin()" v-on:cancel="cancelLogin()"/>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import Modal from "@/components/Modal.vue";
 import Signup from "@/components/Signup.vue";
 import Login from "@/components/Login.vue";
 
 @Component({
   components: {
-    Modal,
     Signup,
     Login
   }

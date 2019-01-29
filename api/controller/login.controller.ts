@@ -16,6 +16,7 @@ export class LoginController extends DefaultController {
       userRepo
         .findOne({ where: { emailAddress } })
         .then((user: User | undefined) => {
+          console.log("found user:", user);
           if (user && user.password === password) {
             sessionRepo
               .findOne({ where: { userId: user.id } })
