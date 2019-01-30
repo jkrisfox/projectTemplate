@@ -1,0 +1,99 @@
+.mycontainer {
+    margin: 25px;
+}
+
+.mycenter {
+    margin: 0 auto;
+    width: 200px;
+    padding-bottom: 20px;
+}
+
+.form {
+    margin: auto;
+    width: 400px;
+    background-color: lightcyan;
+    padding: 25px;
+}
+
+.header {
+    color: lightsalmon;
+    font-size: 32px;
+    font-family: 'Courier New', Courier, monospace;
+    padding-bottom: 5px;
+}
+
+div.border-bottom {
+    border-bottom: 2px solid lightsalmon;
+}
+
+/* format table */
+th {
+    border-collapse: collapse;
+    color: lightsalmon;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+}
+
+th, td {
+    padding: 15px;
+}
+
+table {
+    border-spacing: 20px;
+    margin: 0 auto;
+}
+
+td {
+    text-align: center;
+}
+
+
+/* style buttons */
+button {
+    border: none;
+    color: red;
+    padding: 10px 15px;
+    text-align: center;
+    border: 2px solid red;
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    border-radius: 5px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+  }
+
+  .button2 {
+    color: green;
+    border: 2px solid green;
+  }
+
+  .button2:hover {
+    background-color: green; /* Green */
+    color: white;
+  }
+
+  button:hover {
+    background-color: red; /* Green */
+    color: white;
+  }
+
+  /* style input type */
+  input[type=text] {
+      width: 150 px;
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid lightgray;
+      border-radius: 4px;
+      outline: none;
+  }
+
+input[type=text]:focus {
+    border: 2px solid lightsalmon;
+  }
+
+input[type=checkbox]{
+    width: 40px;
+    height: 40px;
+    border: 1px solid lightsalmon;
+}
