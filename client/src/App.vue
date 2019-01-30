@@ -5,6 +5,8 @@
         <div class="navbar-start">
           <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link> 
           <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
+          <router-link class="navbar-item is-tab" to="/todos" exact-active-class="is-active">My ToDos</router-link>
+          <router-link class="button2" to="/addtodo" exact-active-class="is-active"Add ToDos</router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -66,6 +68,7 @@ export default class App extends Vue {
 
 <style lang="scss">
 @import "~bulma/css/bulma.css";
+@import './ToDoStyle.css';
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
