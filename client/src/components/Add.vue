@@ -16,14 +16,43 @@
 </template>
 
 <script lang="ts">
+
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Modal from "./Modal.vue";
+import { iItem } from "../models/item.interface";
 
 @Component
-export default class Signup extends Vue {
+export default class Add extends Vue {
   addi: Item = {
     title: "",
     date: ""
   };
+
+
+  error: string | boolean = false;
+
+  success() {
+    this.error = false;
+    console.log('hello');
+    axios
+      .post(APIConfig.buildUrl("/item"), {
+        ...this.addi
+      })
+      .then((response: AxiosResponse<iItem>) => {
+        this.$emit("success");
+      })
+      .catch((reason: any) => {
+        this.error = reason;
+      });
+  }
+
+  cancel() {
+    this.$emit("cancel");
+  }
+
+
 }
 
 export interface Item {

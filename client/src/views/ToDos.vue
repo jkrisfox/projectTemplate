@@ -1,71 +1,54 @@
 <template>
     <div class='todos'>
         <h1>My To Do List</h1><br><br>
+        <form class="additem">
+            <input type="text" id="myTitle" name="fname" placeholder="New To Do Item" v-model="item.name">
+            <input type="text" id="myDueDate" name="lname" placeholder="Due Date" v-model="item.date">
+        </form>
         <table id="myTable" style="width:100%">
-        <tr>
-            <th></th>
-            <th>Task</th>
-            <th>Due Date</th>
-            <th><button class="button" v-on:click="showAddModal">Add</button></th>
-        </tr>
-        <tr>
-            <td><input type="checkbox" ></td>
-            <td>cook</td>
-            <td>12/4/19</td>
-            <td><button type="button">delete</button></td>
-        </tr>   
-        <tr>
-            <td><input type="checkbox"></td>
-            <td>run</td>
-            <td>12/4/19</td>          
-            <td><button type="button">delete</button></td>
-        </tr> 
-        <tr v-for="(todo, index) in mytodos" v-bind:key="index">
-            <td><input type="checkbox"></td>
-            <td>{{todo.name}}</td>
-            <td>12/4/19</td>          
-            <td><button type="button" >delete</button></td>
-        </tr>
-    </table>
-    <Modal v-bind:is-showing="showAdd" title="Add" v-on:success="cancelAdd()" v-on:cancel="cancelAdd()">
-      <Add/>
-    </Modal>
+            <tr>
+                <th></th>
+                <th>Task</th>
+                <th>Due Date</th>
+                <th><button class="button" v-on:click="addTodoItem" >Add</button></th>
+            </tr>
+            <tr v-for="(todo, index) in mytodos" v-bind:key="index">
+                <td><input type="checkbox"></td>
+                <td>{{todo.name}}</td>
+                <td>{{todo.dueDate.getMonth() + 1}}/{{todo.dueDate.getDate()}}/{{todo.dueDate.getFullYear()}}</td>          
+                <td><button type="button" v-on:click="deleteToDoItem(index)">delete</button></td>
+            </tr>
+        </table>
+        
     </div>
-
 </template>
 
 <script lang ="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator';
-import Modal from "../components/Modal.vue"
-import Add from "../components/Add.vue"
 
-@Component({
-    components: {
-        Modal,
-        Add
-    }
-})
 
+@Component
 export default class ToDos extends Vue{
     public showAdd: boolean = false;
+    item: itemform = {
+        name: "",
+        date: ""
+    };
+
     mytodos: ToDo[] = [
-        {name: "tod one", dueDate: undefined},
-        {name: "rawr", dueDate: new Date()}
+        {name: "sleep", dueDate: new Date("12/3/1241")},
+        {name: "study", dueDate: new Date("12/3/1241")},
     ];
 
     addTodoItem(){
-        
-        this.mytodos.push({name: `todo${new Date().getTime()}`, dueDate: undefined})
-        this.showAdd = false;
+        this.mytodos.push({name: this.item.name, dueDate: new Date (this.item.date)});
+        this.item.name = "";
+        this.item.date = "";
     }
 
-    showAddModal() {
-        this.showAdd = true;
-    }
-
-    cancelAdd(){
-        this.showAdd = false;
+    deleteToDoItem(index : number){
+        this.mytodos.splice(index, 1);
     }
 
 }
@@ -74,6 +57,12 @@ interface ToDo{
     name: string
     dueDate: Date | undefined;
 }
+
+export interface itemform{
+    name: string;
+    date: string;
+}
+
 </script>
 
 <style scoped> 
