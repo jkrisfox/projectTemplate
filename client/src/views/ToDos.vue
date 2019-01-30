@@ -1,53 +1,24 @@
 <template>
     <div id="todolist" class="table">
         <h1>My Todo List</h1>
-        <div class="row">
-            <div class="cell list">
-                <input type="checkbox">Todo Item 1
-            </div>
-            <div class="cell list">
-                <p>Item 1 Due Date</p>
-            </div>
-            <div class="cell list">
-                <button class="delete-button">Delete</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="cell list">
-                <input type="checkbox">Todo Item 2, which is a longer todo item and has lot of words
-            </div>
-            <div class="cell list">
-                <p>Item 2 Due Date</p>
-            </div>
-            <div class="cell list">
-                <button class="delete-button">Delete</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="cell list">
-                <input type="checkbox">Todo Item 3
-            </div>
-            <div class="cell list">
-                <p>Item 4 Due Date</p>
-            </div>
-            <div class="cell list">
-                <button class="delete-button">Delete</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="cell list">
-                <input type="checkbox">Todo Item 4
-            </div>
-            <div class="cell list">
-                <p>Item 4 Due Date</p>
-            </div>
-            <div class="cell list">
-                <button class="delete-button">Delete</button>
-            </div>
-        </div>
+        
+        <table>
+          <tr>
+            <th class="column-1">To Do:</th>
+            <th class="column-2">By:</th>       
+          </tr>
+          <tr v-for="item in items">
+            <td>{{item.data}}</td>
+            <td>{{item.date}}</td>
+          </tr>
+        </table>
+        
         <br>
         <a class="button is-primary" v-on:click="showAddToDoItemModal()">
                 <strong>Add Item</strong>
+              </a>
+        <a class="button is-primary" v-on:click="getItems()">
+                <strong>Get Items</strong>
               </a>
         <AddToDoItem v-bind:is-showing="showAddToDoItem" v-on:success="successAddToDoItem()" v-on:cancel="cancelAddToDoItem()"/>
     </div>
@@ -56,6 +27,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddToDoItem from "@/components/AddToDoItem.vue";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
+import { iToDoItem } from "../models/user.interface";
 
 @Component({
   components: {
@@ -65,12 +39,29 @@ import AddToDoItem from "@/components/AddToDoItem.vue";
 export default class ToDos extends Vue {
   private msg!: string;
   public showAddToDoItem: boolean = false;
+  public items: Object[] = [];
+
+  // mounted: function () {
+    
+  //     this.getItems();
+    
+  // }
+
+  getItems() {
+    axios.get(APIConfig.buildUrl('/todoitems'), {
+    }).then((response: AxiosResponse<[iToDoItem]>) => {
+      this.items = response.data.items;
+    }).catch((reason: any) => {
+      console.log(reason);
+    })
+  }
 
   showAddToDoItemModal() {
       this.showAddToDoItem = true;
   }
   successAddToDoItem() {
       this.showAddToDoItem = false;
+      this.getItems();
   }
   cancelAddToDoItem() {
       this.showAddToDoItem = false;
