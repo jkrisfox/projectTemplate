@@ -5,3 +5,8 @@ export interface iUser {
   password: string,
   id: number
 }
+export interface iToDoItem {
+  data: string;
+  date: string;
+  id: number;
+}
