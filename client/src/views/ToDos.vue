@@ -1,15 +1,28 @@
 <template>
     <div class="todos">
-        <div> Hi from todos</div>
-    
+        <table>
+            <thead>
+                <th></th>
+                <th> Item </th>
+                <th> Due Date </th>
+            </thead>
         <!--actual to do list -->
         <!--group the box with todo item-->
-        <div v-for="(todo, index) in mytodos" v-bind:key="index">
-            <span>{{ todo.name }}</span> 
-            <span>{{ todo.duedate }}</span>
-            <button class="button" v-on:click="deleteTodoItem(todo.id)"> Delete </button>
+            <tbody>
+                <tr v-for="(todo, index) in mytodos" v-bind:key="index">
+                    <td><input type="checkbox"></td>
+                    <td>{{ todo.name }}</td>
+                    <td>{{ "\t" + todo.duedate + "\t"}}</td>
+                    <td><button class="button" v-on:click="deleteTodoItem(todo.id)"> Delete </button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <span> Title <br><input v-model="message" size= "30px" type="text" ></span>
+            <br>
+            <span> Due Date <br><input  v-model="due_date" class="due-date" size="40px" type="date" ></span>
         </div>
-        <button class="button" v-on:click="addTodoItem"> Add </button>
+        <button class="button" v-on:click="addTodoItem(message, due_date)"> Add </button>
     </div>
 </template>
 
@@ -24,8 +37,8 @@ export default class ToDos extends Vue {
         { name: "todo two", duedate: undefined, id: this.idVal++},
         { name: "todo three", duedate: undefined, id: this.idVal++}
     ];
-    addTodoItem() {
-        this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined, id: this.idVal++});
+    addTodoItem(message: string, due_date: Date) {
+        this.mytodos.push({name: message, duedate: due_date, id: this.idVal++});
     }
     deleteTodoItem(id: number) {
         const index: number = this.mytodos.findIndex((todo: ToDo) => todo.id == id);
@@ -39,7 +52,10 @@ interface ToDo {
 }
 </script>
 
-<style scoped>        
+<style scoped>
+    th, td {
+        padding: 15px;
+    }        
         /*ul {
           list-style: none;
           position: relative;
