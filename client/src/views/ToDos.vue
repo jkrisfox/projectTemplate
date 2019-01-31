@@ -1,14 +1,15 @@
 <template>
   <div id="app">
 
-    <!-- <h2>New To-Do Item</h2>
+    <h2>New To-Do Item</h2>
     <form id="app">
       <label for="title">Title</label>
-      <input type="text" id="title" v-model="title" placeholder="title">
+      <input type="text" id="title" placeholder="title" v-model="forms.title">
       <label for="duedate">Due Date</label>
-      <input type="text" id="ddate" v-model="ddate" placeholder="due date">
-      <button class="button button2" @click="addtoItem">Add</button>
-    </form> -->
+      <input type="text" id="ddate" placeholder="due date" v-model="forms.ddate">
+
+    </form>
+          <button class="button button2" @click="addtoItem">Add</button>
 
     <h2>My ToDoList:</h2>
 
@@ -44,16 +45,20 @@ export default class ToDos extends Vue {
   mytodos: ToDo[] = [
     { name: "sleep", duedate: "Dec/17/2001" },
     { name: "A program", duedate: "Jan/30/2019" }
-	];
+  ];
+  forms: f = {title: "", ddate: ""};
   addtoItem(title : string, ddate : string) {
-    this.mytodos.push({ name: "title", duedate: "ddate" });
+    this.mytodos.push({ name: this.forms.title, duedate: this.forms.ddate });
   }
   deleteItem() {
     this.mytodos.pop();
   }
 }
 
-
+export interface f {
+  title: string;
+  ddate: string;
+}
 interface ToDo {
   name: string | null;
   duedate: string | undefined | null;
