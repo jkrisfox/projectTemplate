@@ -3,8 +3,9 @@
     <div class="navbar">
       <div class="navbar-menu">
         <div class="navbar-start">
-          <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link> 
+          <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link>
           <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
+          <router-link class="navbar-item is-tab" to="/todos" exact-active-class="is-active">My Todos</router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">

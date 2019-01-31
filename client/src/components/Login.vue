@@ -11,7 +11,7 @@
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input" type="password" placeholder="password" v-bind="signup.firstName"/>
+          <input class="input" type="password" placeholder="password" v-bind="signup.password"/>
         </div>
       </div>
     </form>
