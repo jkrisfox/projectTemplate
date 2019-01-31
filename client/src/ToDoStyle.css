@@ -1,0 +1,48 @@
+h2.padding{
+    padding-left: 40px;
+ }
+ 
+ header {
+   background-color: #FFD816;
+   padding: 30px;
+   text-align: left;
+   font-size: 35px;
+   color: white;
+ }
+ 
+ .column{
+    float: left;
+    padding: 7px;
+ }
+ 
+ .left{
+    width: 40%;
+ }
+ 
+ .middle{
+    width: 20%;
+ }
+ 
+ .right{
+    width: 10%;
+ }
+
+ .row{
+     margin-left: 50px;
+ }
+
+.text{
+	margin-left: 25px;
+}
+
+.button{
+	margin-right: 10px;
+}
+
+.button2{
+    margin-left: 70px;
+}
+
+.button3{
+    margin-left: 20px;
+}
