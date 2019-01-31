@@ -5,6 +5,7 @@
         <div class="navbar-start">
           <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link> 
           <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
+          <router-link class="navbar-item is-tab" to="/todos" exact-active-class="is-active">ToDos</router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -23,6 +24,7 @@
     <router-view/>
     <Signup v-bind:is-showing="showSignup" v-on:success="successSignup()" v-on:cancel="cancelSignup()"/>
     <Login v-bind:is-showing="showLogin" v-on:success="successLogin()" v-on:cancel="cancelLogin()"/>
+    
   </div>
 </template>
 
