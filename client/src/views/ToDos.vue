@@ -23,7 +23,7 @@
         <td>{{ todo.name }}</td>
         <td>{{ todo.duedate }}</td>
         <td>
-          <button class="button button3" v-on:click="deleteItem">Delete?</button>
+          <button class="button button3" v-on:click="deleteItem(index)">Delete?</button>
         </td>
       </tr>
     </table>
@@ -49,9 +49,11 @@ export default class ToDos extends Vue {
   forms: f = {title: "", ddate: ""};
   addtoItem(title : string, ddate : string) {
     this.mytodos.push({ name: this.forms.title, duedate: this.forms.ddate });
+    this.forms.title="";
+    this.forms.ddate="";
   }
-  deleteItem() {
-    this.mytodos.pop();
+  deleteItem(index : number) {
+    this.mytodos.splice(index,1);
   }
 }
 
