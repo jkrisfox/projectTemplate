@@ -14,8 +14,8 @@
             </tr>
             <tr v-for="(todo, index) in mytodos" v-bind:key="index">
                 <td><input type="checkbox"></td>
-                <td>{{todo.name}}</td>
-                <td>{{todo.dueDate.getMonth() + 1}}/{{todo.dueDate.getDate()}}/{{todo.dueDate.getFullYear()}}</td>          
+                <td>{{todo.title}}</td>
+                <td><span v-if="todo.date">{{todo.date.getMonth() + 1}}/{{todo.date.getDate()}}/{{todo.date.getFullYear()}}</span></td>          
                 <td><button type="button" v-on:click="deleteToDoItem(index)">delete</button></td>
             </tr>
         </table>
@@ -26,8 +26,9 @@
 <script lang ="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator';
-
-
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
+import { iItem } from "../models/item.interface";
 @Component
 export default class ToDos extends Vue{
     public showAdd: boolean = false;
@@ -36,26 +37,53 @@ export default class ToDos extends Vue{
         date: ""
     };
 
-    mytodos: ToDo[] = [
-        {name: "sleep", dueDate: new Date("12/3/1241")},
-        {name: "study", dueDate: new Date("12/3/1241")},
-    ];
+    mytodos: ToDo[] = [];
+
+    error: string | boolean = false;
 
     addTodoItem(){
-        this.mytodos.push({name: this.item.name, dueDate: new Date (this.item.date)});
-        this.item.name = "";
-        this.item.date = "";
+        this.error = false;
+        console.log('hello');
+        axios
+        .post(APIConfig.buildUrl("/items"), {
+            ...this.item
+        })
+        .then((response: AxiosResponse<iItem>) => {
+            this.$emit("success");
+            this.item.name = "";
+            this.item.date = "";
+            this.mytodos.push({title: response.data.title, date: new Date (response.data.date), id: response.data.id});
+        })
+        .catch((reason: any) => {
+            this.error = reason;
+            this.item.name = "";
+            this.item.date = "";
+        });
+    }
+
+    mounted() {
+        axios.get(APIConfig.buildUrl("/items"))
+        .then((response: AxiosResponse<any>) => {
+            this.$emit("success");
+            this.mytodos = response.data.items.map((item) => {
+                return {...item, date: new Date(item.date)};
+            });
+        })
     }
 
     deleteToDoItem(index : number){
-        this.mytodos.splice(index, 1);
+        const item = this.mytodos[index];
+        axios.delete(APIConfig.buildUrl(`/items/${item.id}`)).then(() => {
+             this.mytodos.splice(index, 1);
+        })
     }
 
 }
 
 interface ToDo{
-    name: string
-    dueDate: Date | undefined;
+    title: string
+    date: Date | undefined;
+    id: number | undefined;
 }
 
 export interface itemform{

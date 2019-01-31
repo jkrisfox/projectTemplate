@@ -18,10 +18,11 @@ export class ItemController extends DefaultController {
       })
       .post((req: Request, res: Response) => {
         const itemRepo = getRepository(Item);
-        const { title, duedate} = req.body;
+        const { name, date} = req.body;
         const item = new Item();
-        item.title = title;
-        item.date = duedate;
+        item.title = name;
+        item.date = date;
+        debugger;
         itemRepo.save(item).then(
           (updateditem) => {
             res.status(200).send({ item });
@@ -31,6 +32,13 @@ export class ItemController extends DefaultController {
           },
         );
       });
+    router.route("/items/:id")
+    .delete((req: Request, res: Response)   => {
+      const id = req.params.id;
+      getRepository(Item).delete({id}).then(() => {
+        res.send(200);
+      })
+    })
     return router;
   }
 }
