@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-
+import asdf from "./views/asdf.vue"
 Vue.use(Router);
 
 export default new Router({
@@ -21,6 +21,13 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/About.vue")
+    },
+    {
+      path: "/asdf",
+      name: "asdf",
+      component: () =>
+        import(/* webpackChunkName: "asdf" */ "./views/asdf.vue")
     }
+
   ]
 });
