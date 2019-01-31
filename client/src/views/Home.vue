@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+     <b-button> I am a Button</b-button>
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
   </div>
