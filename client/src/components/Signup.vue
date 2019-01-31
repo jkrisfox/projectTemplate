@@ -32,8 +32,6 @@
   </modal>
 </template>
 
-
-
 <script lang="ts">
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
@@ -55,9 +53,7 @@ export default class Signup extends Vue {
   error: string | boolean = false;
 
   success() {
-    debugger;
     this.error = false;
-    // this.signup.firstName = "done";
     console.log('hello');
     axios
       .post(APIConfig.buildUrl("/users"), {
@@ -66,9 +62,8 @@ export default class Signup extends Vue {
       .then((response: AxiosResponse<iUser>) => {
         this.$emit("success");
       })
-      .catch((errorResponse: any) => {
-        debugger;
-        this.error = errorResponse.response.data.reason;
+      .catch((reason: any) => {
+        this.error = reason;
       });
   }
 
