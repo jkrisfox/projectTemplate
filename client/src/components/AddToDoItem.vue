@@ -25,7 +25,7 @@ import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Modal from "./Modal.vue";
-import { iToDoItem } from "../models/user.interface";
+import { iToDoItem } from "../models/toDoItem.interface";
 
 @Component({
   components: { Modal }
@@ -40,7 +40,6 @@ export default class AddToDoItem extends Vue {
 
   success() {
     this.error = false;
-    console.log('hello');
     axios
       .post(APIConfig.buildUrl("/todoitems"), {
         ...this.item

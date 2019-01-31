@@ -4,21 +4,24 @@
         
         <table>
           <tr>
+            <th class="column-0"> </th>
             <th class="column-1">To Do:</th>
-            <th class="column-2">By:</th>       
+            <th class="column-2">By:</th>
+            <th class="column-3"> </th>       
           </tr>
-          <tr v-for="item in items">
+          <tr v-for="(item, index) in items" v-bind:key="index">
+            <td><input type="checkbox"></td>
             <td>{{item.data}}</td>
             <td>{{item.date}}</td>
+            <td><button v-on:click="deleteToDoItem(item.id)">Delete</button></td>
           </tr>
         </table>
-        
+
+        {{getItems()}}
+
         <br>
         <a class="button is-primary" v-on:click="showAddToDoItemModal()">
                 <strong>Add Item</strong>
-              </a>
-        <a class="button is-primary" v-on:click="getItems()">
-                <strong>Get Items</strong>
               </a>
         <AddToDoItem v-bind:is-showing="showAddToDoItem" v-on:success="successAddToDoItem()" v-on:cancel="cancelAddToDoItem()"/>
     </div>
@@ -29,7 +32,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import AddToDoItem from "@/components/AddToDoItem.vue";
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
-import { iToDoItem } from "../models/user.interface";
+import { iToDoItem } from "../models/toDoItem.interface";
+import { ToDoItem } from "../../../api/entity";
 
 @Component({
   components: {
@@ -39,17 +43,11 @@ import { iToDoItem } from "../models/user.interface";
 export default class ToDos extends Vue {
   private msg!: string;
   public showAddToDoItem: boolean = false;
-  public items: Object[] = [];
-
-  // mounted: function () {
-    
-  //     this.getItems();
-    
-  // }
+  public items: ToDoItem[] = [];
 
   getItems() {
     axios.get(APIConfig.buildUrl('/todoitems'), {
-    }).then((response: AxiosResponse<[iToDoItem]>) => {
+    }).then((response: AxiosResponse<ToDoItem[]>) => {
       this.items = response.data.items;
     }).catch((reason: any) => {
       console.log(reason);
@@ -65,6 +63,19 @@ export default class ToDos extends Vue {
   }
   cancelAddToDoItem() {
       this.showAddToDoItem = false;
+  }
+
+  deleteToDoItem(id: number) {
+    axios.delete(APIConfig.buildUrl('/todoitems'), {
+      data : {
+        id: id
+      }
+    }).then((response: AxiosResponse<[iToDoItem]>) => {
+      debugger;
+      this.items = response.data.items;
+    }).catch((reason: any) => {
+      console.log(reason);
+    })
   }
 }
 </script>
