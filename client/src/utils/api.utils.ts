@@ -3,4 +3,4 @@ export let APIConfig = {
   buildUrl(path: string): string {
     return `${this.url}${path}`;
   }
-}
+};

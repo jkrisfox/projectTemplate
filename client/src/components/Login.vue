@@ -39,14 +39,17 @@ export default class Signup extends Vue {
 
   success() {
     this.error = false;
-    axios.post(APIConfig.buildUrl('/login'), {
-      ...this.signup
-    }).then((response: AxiosResponse<LoginResponse>) => {
-      this.$store.commit('login', response.data.token);
-      this.$emit("success");
-    }).catch((reason: any) => {
-      this.error = reason;
-    })
+    axios
+      .post(APIConfig.buildUrl("/login"), {
+        ...this.signup
+      })
+      .then((response: AxiosResponse<LoginResponse>) => {
+        this.$store.commit("login", response.data.token);
+        this.$emit("success");
+      })
+      .catch((reason: any) => {
+        this.error = reason;
+      });
   }
 
   cancel() {
@@ -55,7 +58,7 @@ export default class Signup extends Vue {
 }
 
 interface LoginResponse {
-  token: string
+  token: string;
 }
 
 export interface LoginForm {

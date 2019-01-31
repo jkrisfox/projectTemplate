@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-import ToDos from './views/ToDos.vue'
+import ToDos from "./views/ToDos.vue";
 
 Vue.use(Router);
 
@@ -24,11 +24,11 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-      //  this is the plumbing for 
+      //  this is the plumbing for
       //  when someone goes to site.com/todos
       //  the ToDos compoenent gets loaded
-      path: '/todos',
-      name: 'todos',
+      path: "/todos",
+      name: "todos",
       component: ToDos
     }
   ]
