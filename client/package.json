@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.12",
+    "@types/node": "^10.12.19",
     "@vue/cli-plugin-babel": "^3.3.0",
     "@vue/cli-plugin-e2e-cypress": "^3.3.0",
     "@vue/cli-plugin-eslint": "^3.3.0",
