@@ -13,11 +13,13 @@
                     <th>NO.</th>
                     <th>ITEM</th>
                     <th>DUE DATE</th>
+                    <th>DELETE</th>
                 </tr>
                 <tr v-for="(todo,index) in mytodos" v-bind:key="index">
                     <td>{{index+1}}</td>
                     <td><span>{{todo.name}}</span></td>
                     <td><span>{{todo.duedate}}</span></td>
+                    <td><button class="button" v-on:click="deleteItem(index)">x</button></td>
                 </tr>
             </table>
         </div>
@@ -58,6 +60,10 @@ export default class ToDos extends Vue {
     //irrelevant
     addToDoItem(){
         this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
+    }
+
+    deleteItem(ind: number){
+        this.mytodos.splice(ind,1);
     }
 
     successAdditem(n:ToDo){
@@ -107,6 +113,10 @@ h1 {
 table {
     width: 50%;
     margin: auto;
+}
+
+th {
+    background-color: darkgrey;
 }
 
 th, td {
