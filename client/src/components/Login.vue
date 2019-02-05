@@ -1,17 +1,28 @@
 <template>
-  <modal v-bind:is-showing="isShowing" title="Login" success-button="Login" v-on:success="success" v-on:cancel="cancel">
-    <form  v-on:submit.prevent="onSubmit">
+  <modal
+    v-bind:is-showing="isShowing"
+    title="Login"
+    success-button="Login"
+    v-on:success="success"
+    v-on:cancel="cancel"
+  >
+    <form v-on:submit.prevent="onSubmit">
       <p v-if="error">{{ error }}</p>
       <div class="field">
         <label class="label">Email Address</label>
         <div class="control">
-          <input class="input" type="text" placeholder="email address" v-bind="signup.emailAddress"/>
+          <input
+            class="input"
+            type="text"
+            placeholder="email address"
+            v-model="signup.emailAddress"
+          >
         </div>
       </div>
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input" type="password" placeholder="password" v-bind="signup.firstName"/>
+          <input class="input" type="password" placeholder="password" v-model="signup.password">
         </div>
       </div>
     </form>
@@ -39,14 +50,22 @@ export default class Signup extends Vue {
 
   success() {
     this.error = false;
-    axios.post(APIConfig.buildUrl('/login'), {
-      ...this.signup
-    }).then((response: AxiosResponse<LoginResponse>) => {
-      this.$store.commit('login', response.data.token);
-      this.$emit("success");
-    }).catch((reason: any) => {
-      this.error = reason;
-    })
+    debugger;
+    axios
+      .post(APIConfig.buildUrl("/login"), {
+        emailAddress: this.signup.emailAddress,
+        password: this.signup.password
+      })
+      .then((response: AxiosResponse<LoginResponse>) => {
+        this.$store.commit("login", {
+          token: response.data.token,
+          userid: response.data.userId
+        });
+        this.$emit("success");
+      })
+      .catch((response: AxiosResponse) => {
+        this.error = response.data.error;
+      });
   }
 
   cancel() {
@@ -55,7 +74,8 @@ export default class Signup extends Vue {
 }
 
 interface LoginResponse {
-  token: string
+  token: string;
+  userId: number;
 }
 
 export interface LoginForm {
