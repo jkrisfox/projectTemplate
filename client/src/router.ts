@@ -35,5 +35,6 @@ export default new Router({
       name: "myProfile",
       component: MyProfile
     }
+
   ]
 });
