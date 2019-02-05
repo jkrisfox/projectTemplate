@@ -32,7 +32,7 @@ export class ToDoController extends DefaultController {
         const todoList = [];
         sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
             const u = foundSession!.user;
-            todoRepo.find({where: [{user: u}]}).then((results: ToDo[] | undefined) => {
+            todoRepo.find({where: [{user: u}]}).then((results: ToDo[]) => {
                 res.status(200).send(results);
             });
         });
