@@ -1,11 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-<<<<<<< HEAD
 import MyProfile from "./views/MyProfile.vue";
-=======
 import Todos from "./views/ToDos.vue";
->>>>>>> adding todo list
 
 Vue.use(Router);
 
@@ -28,15 +25,14 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-<<<<<<< HEAD
       path: "/my-profile",
       name: "myProfile",
       component: MyProfile
-=======
+    },
+    {
       path: "/todos",
       name: "todos",
       component: Todos
->>>>>>> adding todo list
     }
   ]
 });

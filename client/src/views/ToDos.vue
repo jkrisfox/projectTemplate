@@ -81,8 +81,7 @@ function reorderDate(date: string) {
 }
 
 interface ToDo {
-  name: string,
+  name: string;
   duedate: String;
 }
 </script>
-
