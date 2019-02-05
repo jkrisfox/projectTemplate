@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div class="todo">
     <table class="table is-bordered is-striped">
       <thead class="is-primary">
@@ -45,23 +44,10 @@
       </tfoot>
     </table>
   </div>
-=======
-  <div class="todos">
-    <div>Hi from todos</div>
-
-    <div v-for="(todo, index) in mytodos" v-bind:key="index">
-      <span>{{ todo.name }}</span>
-      <span>{{ todo.duedate }}</span>
-    </div>
-    <button class="button" v-on:click="addTodoItem">Add</button>
-  </div>
-  
->>>>>>> 741e3335db43397093bd5c5fd609569345cb4687
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-<<<<<<< HEAD
 import {Component} from "vue-property-decorator";
 @Component
 export default class ToDos extends Vue {
@@ -99,27 +85,3 @@ interface ToDo {
   duedate: String;
 }
 </script>
-=======
-import { Component } from "vue-property-decorator";
-@Component
-export default class ToDos extends Vue {
-  mytodos: ToDo[] = [
-    { name: "Tod one", duedate: undefined },
-    { name: "todo two", duedate: undefined },
-    { name: "todo three", duedate: undefined }
-  ];
-  addTodoItem() {
-    this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
-  }
-}
-
-interface ToDo {
-  name: string;
-  duedate: Date | undefined;
-}
-</script>
-
-<style scoped>
-</style>
-
->>>>>>> 741e3335db43397093bd5c5fd609569345cb4687
