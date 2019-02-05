@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div>
     <modal
       v-bind:is-showing="isVisible"
@@ -46,10 +47,23 @@
     </table>
     <button class="button" v-on:click="showAddModal">Add</button>
   </div>
+=======
+  <div class="todos">
+    <div>Hi from todos</div>
+
+    <div v-for="(todo, index) in mytodos" v-bind:key="index">
+      <span>{{ todo.name }}</span>
+      <span>{{ todo.duedate }}</span>
+    </div>
+    <button class="button" v-on:click="addTodoItem">Add</button>
+  </div>
+  
+>>>>>>> 741e3335db43397093bd5c5fd609569345cb4687
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+<<<<<<< HEAD
 import { Component, Prop } from "vue-property-decorator";
 import Modal from "../components/Modal.vue";
 import axios, { AxiosResponse } from "axios";
@@ -110,17 +124,33 @@ export default class ToDos extends Vue {
 
   cancel() {
     this.hideAddModal();
+=======
+import { Component } from "vue-property-decorator";
+@Component
+export default class ToDos extends Vue {
+  mytodos: ToDo[] = [
+    { name: "Tod one", duedate: undefined },
+    { name: "todo two", duedate: undefined },
+    { name: "todo three", duedate: undefined }
+  ];
+  addTodoItem() {
+    this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
+>>>>>>> 741e3335db43397093bd5c5fd609569345cb4687
   }
 }
 
 interface ToDo {
   name: string;
   duedate: Date | undefined;
+<<<<<<< HEAD
   completed: boolean;
+=======
+>>>>>>> 741e3335db43397093bd5c5fd609569345cb4687
 }
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 table {
   width: 500px;
   margin-left: 30px;
@@ -162,5 +192,7 @@ th {
 #to-do-header {
   margin-bottom: 10px;
 }
+=======
+>>>>>>> 741e3335db43397093bd5c5fd609569345cb4687
 </style>
 
