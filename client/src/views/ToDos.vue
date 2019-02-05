@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {Component} from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 @Component
 export default class ToDos extends Vue {
   mytodos: ToDo[] = [];
@@ -60,24 +60,27 @@ export default class ToDos extends Vue {
   addTodoListItem() {
     this.nameError = this.newtodoname == "";
     this.dateError = this.newtododatestring == "";
-    
+
     if (this.nameError || this.dateError) return;
 
-    this.mytodos.push({name: this.newtodoname, duedate: reorderDate(this.newtododatestring)});
+    this.mytodos.push({
+      name: this.newtodoname,
+      duedate: reorderDate(this.newtododatestring)
+    });
 
     this.newtodoname = "";
     this.newtododatestring = "";
   }
   deleteFromList(i: number) {
-    this.mytodos = this.mytodos.filter(function (value, index, arr){
+    this.mytodos = this.mytodos.filter(function(value, index, arr) {
       return index != i;
     });
   }
 }
 
 function reorderDate(date: string) {
-  let sDate = date.split('-');
-  return sDate[2] + '-' + sDate[1] + '-' + sDate[0];
+  let sDate = date.split("-");
+  return sDate[2] + "-" + sDate[1] + "-" + sDate[0];
 }
 
 interface ToDo {

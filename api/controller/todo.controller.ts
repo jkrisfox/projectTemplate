@@ -25,12 +25,6 @@ export class ToDoController extends DefaultController {
           res.status(200).send({ todo });
         });
       });
-      router.route("/todos/:id").put((req: Request, res: Response) => {
-        const todoRepo = getRepository(ToDo);
-        todo.findOne(req.params.id).then((foundToDo: ToDo) => {
-          // save updates here
-        });
-      });
     }).get((req: Request, res: Response) => {
         const token = req.get("token");
         const sessionRepo = getRepository(Session);
@@ -39,11 +33,16 @@ export class ToDoController extends DefaultController {
         sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
             const u = foundSession!.user;
             todoRepo.find({where: [{user: u}]}).then((results: ToDo[] | undefined) => {
-                res.statusCode = 200;
-                res.send(results);
+                res.status(200).send(results);
             });
         });
     });
+    router.route("/todos/:id").put((req: Request, res: Response) => {
+        const todoRepo = getRepository(ToDo);
+        todoRepo.findOne(req.params.id).then((foundToDo: ToDo) => {
+          
+        });
+      });
 
     return router;
   }
