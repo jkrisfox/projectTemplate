@@ -58,6 +58,7 @@ export default class ToDos extends Vue {
   dateError: boolean = false;
   nameError: boolean = false;
   addTodoListItem() {
+    debugger;
     this.nameError = this.newtodoname == "";
     this.dateError = this.newtododatestring == "";
 

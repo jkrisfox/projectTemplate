@@ -63,7 +63,8 @@ export default class Signup extends Vue {
       .post(APIConfig.buildUrl("/users"), {
         ...this.signup
       })
-      .then((response: AxiosResponse<iUser>) => {
+      .then((response: AxiosResponse<{user: iUser}>) => {
+        debugger;
         this.$emit("success");
       })
       .catch((errorResponse: any) => {
