@@ -1,12 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-<<<<<<< HEAD
 import ToDos from "./views/ToDos.vue";
 import newItm from "./views/newitem.vue";
-=======
 import MyProfile from "./views/MyProfile.vue";
->>>>>>> 425c78e09634ac36f3e8ad2748809c8921d788f7
 
 Vue.use(Router);
 
@@ -29,7 +26,6 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-<<<<<<< HEAD
       path: "/todos",
       name: "/todos",
       component: ToDos
@@ -38,11 +34,11 @@ export default new Router({
       path: "/newItm",
       name: "/newItm",
       component: newItm
-=======
+    },
+    {
       path: "/my-profile",
       name: "myProfile",
       component: MyProfile
->>>>>>> 425c78e09634ac36f3e8ad2748809c8921d788f7
     }
   ]
 });
