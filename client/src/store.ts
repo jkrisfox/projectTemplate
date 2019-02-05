@@ -7,18 +7,27 @@ Vue.use(Vuex);
 
 interface iRootState {
   userToken: string | null;
+  userId: number | null;
+}
+
+interface iLoginPayload {
+  token: string;
+  userid: number;
 }
 
 const state: iRootState = {
-  userToken: null
+  userToken: null,
+  userId: null
 };
 
 const mutations: MutationTree<iRootState> = {
-  login(state, token: string) {
-    state.userToken = token;
+  login(state, payload: iLoginPayload) {
+    state.userToken = payload.token;
+    state.userId = payload.userid;
   },
   logout(state) {
     state.userToken = null;
+    state.userId = null;
   }
 };
 
