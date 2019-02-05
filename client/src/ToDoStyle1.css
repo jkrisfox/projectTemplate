@@ -27,22 +27,6 @@ h2.padding{
     width: 10%;
  }
 
- .middle1{
-    margin-left: 90px;
-    margin-right: 20px;
-    width: 30%;
- }
-
- .middle2{
-     margin-right: 20px;
-     width: 30%;
- }
-
- .middle3{
-     margin-right: 90px;
-     width: 15%;
- }
- 
  .row{
      margin-left: 50px;
  }
@@ -57,4 +41,8 @@ h2.padding{
 
 .button2{
     margin-left: 70px;
+}
+
+.button3{
+    margin-left: 20px;
 }

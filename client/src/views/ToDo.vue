@@ -45,7 +45,35 @@
                 <hr width=1050px align=left>
             </my-item>
         </ul>
-        <router-link class="button2" to="/addtodos" exact-active-class="is-active">Add ToDos</router-link>
+
+        <br><br><br>
+        
+        <div class="row">
+            <form id="new_item" class="text" @submit.prevent="processForm(item, finish)">
+                <br>
+                <div class="column middle1">
+                    Item: 
+                    <input 
+                        type="text" 
+                        class="input"
+                        name="item"
+                        v-model="form.title">
+                 </div>
+  
+                <span>Finish By:</span>
+                <br> 
+                <div class="column middle2">
+                    <input 
+                        type="text" 
+                         class="input"
+                         name="finish"
+                         v-model="form.date">
+                </div>
+                <div class="column middle3">
+                    <button class="button3" v-on:click="add(item, finish)">Save</button>
+                </div>
+            </form> 
+        </div>
     </div>
     
 </template>
@@ -58,12 +86,19 @@ import AddToDo from "@/components/AddToDo.vue"
   components: { AddToDo }
 })
 export default class ToDos extends Vue{
+    form: newItem = {
+        title: "",
+        date: ""
+    };
+
     mytodos: ToDo[] = [
-        {name: "Grocery Shopping", duedate: undefined}
+        {name: "Grocery Shopping", new Date("2/2/2019")};
     ]; 
 
     addToDoItem(name: string, duedate: string){
-       this.mytodos.push({name: ``, duedate: undefined});
+       this.mytodos.push(name, duedate);
+       this.form.title = "";
+       this.form.date = "";
     }
 
     removeItem(index: number){
@@ -73,6 +108,11 @@ export default class ToDos extends Vue{
 
 interface ToDo{
     name: string;
-    duedate: string | undefined;
+    duedate: Date | undefined;
+}
+
+export interface newItem{
+    title: string;
+    date: string;
 }
 </script>
