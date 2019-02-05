@@ -65,7 +65,7 @@ export default class ToDos extends Vue{
         axios.get(APIConfig.buildUrl("/items"))
         .then((response: AxiosResponse<any>) => {
             this.$emit("success");
-            this.mytodos = response.data.items.map((item) => {
+            this.mytodos = response.data.items.map((item : any) => {
                 return {...item, date: new Date(item.date)};
             });
         })

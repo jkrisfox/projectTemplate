@@ -25,12 +25,14 @@
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input" type="password" placeholder="password" v-model="signup.firstName"/>
+          <input class="input" type="password" placeholder="password" v-model="signup.password"/>
         </div>
       </div>
     </form>
   </modal>
 </template>
+
+
 
 <script lang="ts">
 import axios, { AxiosResponse } from "axios";
@@ -53,7 +55,9 @@ export default class Signup extends Vue {
   error: string | boolean = false;
 
   success() {
+    debugger;
     this.error = false;
+    // this.signup.firstName = "done";
     console.log('hello');
     axios
       .post(APIConfig.buildUrl("/users"), {
@@ -62,8 +66,9 @@ export default class Signup extends Vue {
       .then((response: AxiosResponse<iUser>) => {
         this.$emit("success");
       })
-      .catch((reason: any) => {
-        this.error = reason;
+      .catch((errorResponse: any) => {
+        debugger;
+        this.error = errorResponse.response.data.reason;
       });
   }
 
