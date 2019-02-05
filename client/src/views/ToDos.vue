@@ -48,11 +48,13 @@ export default class ToDos extends Vue{
         .post(APIConfig.buildUrl("/items"), {
             ...this.item
         })
-        .then((response: AxiosResponse<iItem>) => {
-            this.$emit("success");
+        .then((response: AxiosResponse<{item: iItem}>) => {
+            debugger;
             this.item.name = "";
             this.item.date = "";
-            this.mytodos.push({title: response.data.title, date: new Date (response.data.date), id: response.data.id});
+            const { title, date, id } = response.data.item;
+            this.mytodos.push({title, date: new Date (date), id});
+            this.$emit("success");
         })
         .catch((reason: any) => {
             this.error = reason;
