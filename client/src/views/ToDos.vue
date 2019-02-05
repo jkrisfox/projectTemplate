@@ -39,6 +39,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop } from "vue-property-decorator";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
+
 import AddItem from "@/components/AddItem.vue";
 
 @Component({
@@ -50,6 +53,7 @@ import AddItem from "@/components/AddItem.vue";
 export default class ToDos extends Vue {
     public showAddItem: boolean = false;
 
+    //fill this with data from the database?
     mytodos: ToDo[] = [];
 
     new_item: ToDo = {
@@ -67,9 +71,16 @@ export default class ToDos extends Vue {
     }
 
     successAdditem(n:ToDo){
-        console.log("@success add item");
-        console.log(n);
+        //console.log("@success add item");
+        //console.log(n);
+
+        //get rid of this later
         this.mytodos.push({name: n.name, duedate: n.duedate});
+
+        //adding new item to database
+        //this.error = false;
+        //axios.post(APIConfig.buildUrl("/todos")
+
         this.showAddItem = false;
     }
     cancelAddItem(){

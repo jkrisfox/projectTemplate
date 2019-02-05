@@ -7,14 +7,12 @@
         <label class="label">Item</label>
         <div class="control">
           <input class="input" type="text" id="n" placeholder="what do you need to do?" v-model="add_item.name"/>
-          <!--<input class="input" type="text" placeholder="what do you need to do?" v-bind="add_item.new_item"/>-->
         </div>
       </div>
       <div class="field">
         <label class="label">Due Date</label>
         <div class="control">
           <input class="input" type="date" id="d" placeholder="yyyy-MM-dd" v-model="add_item.duedate"/>
-          <!--<input class="input" type="date" placeholder="yyy-MM-dd" v-bind="add_item.due_date"/>-->
         </div>
       </div>
     </form>
@@ -41,13 +39,13 @@ export default class Add_Item extends Vue {
 
   success() {
     this.error = false; 
-    console.log("adding item: " + this.add_item.name +", due: " + this.add_item.duedate);
+    //console.log("adding item: " + this.add_item.name +", due: " + this.add_item.duedate);
     this.$emit("success",this.add_item);
     this.clearForm();
   }
 
   cancel() {
-    console.log("cancel add item");
+    //console.log("cancel add item");
     this.$emit("cancel");
     this.clearForm();
   }
