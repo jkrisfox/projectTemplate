@@ -39,7 +39,7 @@ export default class ToDos extends Vue {
 
 interface ToDo {
   name: string;
-  duedate: Date;
+  duedate: Date | undefined;
 }
 </script>
 
