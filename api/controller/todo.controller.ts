@@ -35,7 +35,6 @@ export class TodoController extends DefaultController {
                 });
             });
         });
-
         return router;
     }
 }
