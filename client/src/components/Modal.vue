@@ -10,7 +10,7 @@
         <slot/>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" v-on:click="successHandler()">{{ success || "Save" }}</button>
+        <button class="button is-success" v-on:click="successHandler()">{{ successButton }}</button>
         <button class="button" v-on:click="cancelHandler()">Cancel</button>
       </footer>
     </div>
@@ -24,7 +24,8 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 export default class Modal extends Vue {
   @Prop(String) title!: string;
   @Prop(Boolean) isShowing!: boolean;
-  @Prop(String) success: string | undefined;
+  @Prop({ type: String, default: "Save" })
+  successButton: string | undefined;
 
   successHandler(): void {
     this.$emit("success");

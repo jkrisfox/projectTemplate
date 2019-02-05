@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export default class User {
+export class User {
   @PrimaryGeneratedColumn()
   public id!: number;
 
@@ -13,6 +13,9 @@ export default class User {
 
   @Column()
   public password!: string;
+
+  @Column()
+  public profileUrl!: string;
 
   @Column()
   @Index({ unique: true })
