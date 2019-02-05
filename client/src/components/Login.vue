@@ -39,8 +39,10 @@ export default class Signup extends Vue {
 
   success() {
     this.error = false;
+    debugger;
     axios.post(APIConfig.buildUrl('/login'), {
-      ...this.signup
+      emailAddress: this.signup.emailAddress,
+      password: this.signup.password,
     }).then((response: AxiosResponse<LoginResponse>) => {
       this.$store.commit('login', response.data.token);
       this.$emit("success");
