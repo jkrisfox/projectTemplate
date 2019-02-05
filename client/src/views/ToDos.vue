@@ -52,6 +52,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import Modal from "../components/Modal.vue";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
 
 @Component({
   components: {
@@ -60,14 +62,20 @@ import Modal from "../components/Modal.vue";
 })
 export default class ToDos extends Vue {
   @Prop(Boolean) isVisible = false;
-  mytodos: ToDo[] = [
-    { name: "Item one", duedate: new Date() },
-    { name: "Item two", duedate: new Date() }
-  ];
+  mytodos: ToDo[] = [];
+
+  mounted() {
+    axios.get(APIConfig.buildUrl("/todos"), {}).then((response: AxiosResponse<ToDo[]>) => {
+      this.mytodos = response.data
+    }).catch((response: AxiosResponse) => {
+      console.log("error getting stuff");
+    })
+  }
 
   newItem: ToDo = {
     name: "",
     duedate: undefined,
+    completed: false
   };
 
   showAddModal() {
@@ -79,9 +87,19 @@ export default class ToDos extends Vue {
   }
 
   addToDoItem() {
-    this.mytodos.push({
+    const newTodo: ToDo = {
       name: this.newItem.name,
-      duedate: this.newItem.duedate
+      duedate: this.newItem.duedate,
+      completed: this.newItem.completed
+    }
+    axios.post(APIConfig.buildUrl("/todos"), {
+      title: newTodo.name,
+      duedate: newTodo.duedate,
+      completed: newTodo.completed
+    }).then((response: AxiosResponse<ToDo>) => {
+      this.mytodos.push(response.data)
+    }).catch((response: AxiosResponse) => {
+      console.log(response.data.error)
     });
     this.hideAddModal();
   }
@@ -98,6 +116,7 @@ export default class ToDos extends Vue {
 interface ToDo {
   name: string;
   duedate: Date | undefined;
+  completed: boolean;
 }
 </script>
 
