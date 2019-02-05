@@ -22,7 +22,20 @@ export class TodoController extends DefaultController {
                     res.status(200).send({loggedOut: true});
                 });
             });
+        }).get((req: Request, res: Response) => {
+            const token = req.get("token");
+            const sessionRepo = getRepository(Session);
+            const todoRepo = getRepository(ToDo);
+            const todoList = [];
+            sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
+                const u = foundSession!.user;
+                todoRepo.find({where: [{user: u}]}).then((results: ToDo[] | undefined) => {
+                    res.statusCode = 200;
+                    res.send(results);
+                });
+            });
         });
+
         return router;
     }
 }
