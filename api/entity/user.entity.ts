@@ -15,6 +15,9 @@ export class User {
   public password!: string;
 
   @Column()
+  public profileUrl!: string;
+
+  @Column()
   @Index({ unique: true })
   public emailAddress!: string;
 }
