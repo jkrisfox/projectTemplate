@@ -82,12 +82,14 @@ export default class ToDos extends Vue{
 
 }
 
+// front end object that holds server objects 
 interface ToDo{
     title: string
     date: Date | undefined;
     id: number | undefined;
 }
 
+// pushed to back end
 export interface itemform{
     name: string;
     date: string;
