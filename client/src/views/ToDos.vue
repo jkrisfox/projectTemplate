@@ -51,6 +51,7 @@ import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 import { iToDo } from "../models/todo.interface";
 import { ToDoList } from "../models/todoList";
+import { iUser } from '@/models/user.interface';
 
 @Component
 export default class ToDos extends Vue {
@@ -81,7 +82,8 @@ export default class ToDos extends Vue {
         APIConfig.buildUrl("/todos"),
         {
           title: this.newToDoTitle,
-          dueDate: this.newDueDate
+          dueDate: this.newDueDate,
+          completed: false
         },
         { headers: { token: this.$store.state.userToken } }
       )
@@ -97,22 +99,29 @@ export default class ToDos extends Vue {
 
   deleteItem(itemId: number) {
     this.error = false;
-    console.log(this.todos);
     axios
       .delete(APIConfig.buildUrl(`/todos/${itemId}`), {
         headers: { token: this.$store.state.userToken }
       })
-      .then((response: AxiosResponse<{ todo: iToDo }>) => {
-        this.todos = this.todos.filter((t: iToDo) => {
-          console.log(response.data.todo.id);
-          return t.id != response.data.todo.id;
-        });
+      .then((response: AxiosResponse<ToDoResponse>) => {
+        console.log(response.data.id);
+        this.todos = this.todos.filter((t:iToDo) => {
+          return t.id != response.data.id;
+        })
         this.$emit("success");
       })
       .catch(response => {
         this.error = response.message;
       });
   }
+}
+
+interface ToDoResponse {
+  title: string,
+  dueDate: string,
+  id: number,
+  complete: boolean,
+  user: iUser;
 }
 
 function reorderDate(date: string) {

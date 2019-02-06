@@ -19,12 +19,14 @@ export class ToDoController extends DefaultController {
       const sessionRepo = getRepository(Session);
       const todoRepo = getRepository(ToDo);
       const todo = new ToDo();
+
       sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
         if (foundSession) {
           const user = foundSession.user;
           console.log(foundSession);
           todo.dueDate = req.body.dueDate;
           todo.title = req.body.title;
+          todo.complete = req.body.completed;
           todo.user = user;
           todoRepo.save(todo).then((savedTodo: ToDo | undefined) => {
             if (savedTodo) {
