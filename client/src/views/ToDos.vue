@@ -22,7 +22,10 @@ export default class ToDos extends Vue {
     { name: "todo three", duedate: undefined }
   ];
   addTodoItem() {
-    this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
+    this.mytodos.push({
+      name: `todo${new Date().getTime()}`,
+      duedate: undefined
+    });
   }
 }
 
@@ -34,4 +37,3 @@ interface ToDo {
 
 <style scoped>
 </style>
-
