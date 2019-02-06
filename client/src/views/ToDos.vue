@@ -13,12 +13,14 @@
                     <th>NO.</th>
                     <th>ITEM</th>
                     <th>DUE DATE</th>
+                    <th>COMPLETE</th>
                     <th>DELETE</th>
                 </tr>
                 <tr v-for="(todo,index) in mytodos" v-bind:key="index">
                     <td>{{index+1}}</td>
                     <td><span>{{todo.name}}</span></td>
                     <td><span>{{todo.duedate}}</span></td>
+                    <td><span>{{todo.complete}}</span></td>
                     <td><button class="button" v-on:click="deleteItem(index)">x</button></td>
                 </tr>
             </table>
@@ -38,11 +40,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop} from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 
 import AddItem from "@/components/AddItem.vue";
+import Axios from 'axios';
 
 @Component({
   components: {
@@ -52,18 +55,20 @@ import AddItem from "@/components/AddItem.vue";
 
 export default class ToDos extends Vue {
     public showAddItem: boolean = false;
+    error: string | boolean = false;
 
     //fill this with data from the database?
     mytodos: ToDo[] = [];
 
     new_item: ToDo = {
         name: "",
-        duedate: new Date()
+        duedate: new Date(),
+        complete: false,
     }
 
     //irrelevant
     addToDoItem(){
-        this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
+        this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined, complete: false});
     }
 
     deleteItem(ind: number){
@@ -75,11 +80,28 @@ export default class ToDos extends Vue {
         //console.log(n);
 
         //get rid of this later
-        this.mytodos.push({name: n.name, duedate: n.duedate});
+        this.mytodos.push({name: n.name, duedate: n.duedate, complete: false});
 
         //adding new item to database
-        //this.error = false;
-        //axios.post(APIConfig.buildUrl("/todos")
+        this.error = false;
+        axios
+        .post(APIConfig.buildUrl("/todos"), {
+            name: n.name,
+            duedate: n.duedate,
+        })
+        .then((response: AxiosResponse<ToDoResponse>) => {
+            this.$store.commit("todo", {
+                token: response.data.token,
+                todoId: response.data.todoId,
+                //name: response.data.name,
+                //duedate: response.data.duedate,
+            });
+            //this.$emit("Success");
+        })
+        .catch((response: AxiosResponse) => {
+            debugger;
+            this.error = response.data.error;
+        });
 
         this.showAddItem = false;
     }
@@ -95,6 +117,14 @@ export default class ToDos extends Vue {
 interface ToDo {
     name: string;
     duedate: Date | undefined;
+    complete: boolean,
+}
+
+interface ToDoResponse {
+    token: string;
+    todoId: string;
+    //name: string;
+    //duedate: Date;
 }
 
 </script>

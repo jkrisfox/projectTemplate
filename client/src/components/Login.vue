@@ -49,8 +49,10 @@ export default class Signup extends Vue {
   @Prop(Boolean) isShowing: boolean = false;
 
   success() {
+    console.log("login success");
+
     this.error = false;
-    debugger;
+    //debugger;
     axios
       .post(APIConfig.buildUrl("/login"), {
         emailAddress: this.signup.emailAddress,
@@ -64,11 +66,13 @@ export default class Signup extends Vue {
         this.$emit("success");
       })
       .catch((response: AxiosResponse) => {
-        this.error = response.data.error;
+        //this.error = response.data.error;
       });
   }
 
   cancel() {
+    console.log("login cancelled");
+
     this.$emit("cancel");
   }
 }

@@ -10,7 +10,7 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary" v-if="!isLoggedIn" v-on:click="showSignupModal()">
+              <a class="button is-primary" v-if="!isLoggedIn" v-on:click="showSignupModal">
                 <strong>Sign up</strong>
               </a>
               <router-link
@@ -19,7 +19,7 @@
                 to="/my-profile"
                 exact-active-class="is-active"
               >My Profile</router-link>
-              <a class="button is-light" v-if="!isLoggedIn" v-on:click="showLoginModal()">Log in</a>
+              <a class="button is-light" v-if="!isLoggedIn" v-on:click="showLoginModal">Log in</a>
               <a class="button is-light" v-if="isLoggedIn" v-on:click="logout">Log out</a>
             </div>
           </div>
@@ -29,10 +29,10 @@
     <router-view class="container"/>
     <Signup
       v-bind:is-showing="showSignup"
-      v-on:success="successSignup()"
-      v-on:cancel="cancelSignup()"
+      v-on:success="successSignup"
+      v-on:cancel="cancelSignup"
     />
-    <Login v-bind:is-showing="showLogin" v-on:success="successLogin()" v-on:cancel="cancelLogin()"/>
+    <Login v-bind:is-showing="showLogin" v-on:success="successLogin" v-on:cancel="cancelLogin"/>
     
   </div>
 </template>
