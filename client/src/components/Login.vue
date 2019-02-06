@@ -50,7 +50,6 @@ export default class Signup extends Vue {
 
   success() {
     this.error = false;
-    debugger;
     axios
       .post(APIConfig.buildUrl("/login"), {
         emailAddress: this.signup.emailAddress,

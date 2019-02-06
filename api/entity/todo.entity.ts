@@ -9,7 +9,7 @@ export class ToDo {
   public title!: string;
 
   @Column()
-  public complete!: boolean;
+  public complete: boolean = false;
 
   @Column()
   public dueDate!: string;

@@ -34,11 +34,6 @@ export default new Router({
       path: "/my-profile",
       name: "myProfile",
       component: MyProfile
-    },
-    {
-      path: "/todos",
-      name: "todos",
-      component: Todos
     }
   ]
 });
