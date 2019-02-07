@@ -10,30 +10,30 @@
 
     </form>
     <button class="button button2" @click="addtoItem">Add</button> -->
-
+    {{loadToDos()}}
     <h2>My ToDoList:</h2>
-
-    <table v-for="(todo, index) in mytodos" v-bind:key="index" style="width:100%">
+    <table>
       <tr>
-        <th>Todo item   </th>
-        <th>Due date   </th>
+        <th>Todo   </th>
+        <th>Duedate   </th>
         <th>Delete   </th>
       </tr>
-      <tr>
-        <td>{{ todo.name }}</td>
-        <td>{{ todo.duedate }}</td>
+      <tr v-for="(todo, index) in mytodos" v-bind:key="index" style="width:100%">
+        <td>{{ todo.title }}</td>
+        <td>{{ new Date(todo.ddate).toDateString() }}</td>
         <td>
-          <button class="button button3" v-on:click="deleteItem(index)">Delete?</button>
+          <button class="button button3" v-on:click="deleteItem(todo.id)">Delete?</button>
         </td>
       </tr>
     </table>
+
     <!-- <button class="button button2" v-on:click="addtoItem">Add</button> -->
-    <a class="button is-primary" v-on:click="showSignupModal()"><strong>Add</strong></a>
+    <a class="button button2" v-if="isLoggedIn" v-on:click="showNewItmModal()"><strong>Add</strong></a>
 
     <newItm
-      v-bind:is-showing="showSignup"
-      v-on:success="successSignup()"
-      v-on:cancel="cancelSignup()"
+      v-bind:is-showing="showNewItm"
+      v-on:success="success()"
+      v-on:cancel="cancel()"
     />
     <!-- <button class="button button2" v-on:click="addtoItem()">Save</button>
     <button class="button button3">Cancel</button> -->
@@ -42,9 +42,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
 import newItm from "@/components/newitem.vue";
+
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import Modal from "./Modal.vue";
+import { itodo } from "../models/todo.interface";
+
 
 @Component({
   components: {
@@ -53,28 +58,45 @@ import newItm from "@/components/newitem.vue";
 })
 export default class ToDos extends Vue {
   public shownt: boolean = false;
-  public showSignup: boolean = false;
-  mytodos: ToDo[] = [
-    { name: "sleep", duedate: "Dec/17/2001" },
-    { name: "A program", duedate: "Jan/30/2019" }
-  ];
-  forms: f = {title: "", ddate: ""};
-  addtoItem(title : string, ddate : string) {
-    this.mytodos.push({ name: this.forms.title, duedate: this.forms.ddate });
-    this.forms.title="";
-    this.forms.ddate="";
+  public showNewItm: boolean = false;
+  mytodos: ToDo[] = [];
+  get isLoggedIn(): boolean {
+    return !!this.$store.state.user;
   }
+  loadToDos() {
+    if (this.$store.state.user) {
+      axios.get(APIConfig.buildUrl("/todos"), {
+        headers: {token: this.$store.state.userToken}
+      })
+      .then((response) => {
+        this.mytodos = response.data;
+      })
+      .catch((errorResponse: any) => {
+        this.mytodos = errorResponse.response.data.reason;
+      });
+    }
+  }
+  // forms: f = {title: "", ddate: ""};
+  // addtoItem(title : string, ddate : string) {
+  //   this.mytodos.push({ name: this.forms.title, duedate: this.forms.ddate });
+  //   this.forms.title="";
+  //   this.forms.ddate="";
+  // }
   deleteItem(index : number) {
-    this.mytodos.splice(index,1);
+     axios.delete(APIConfig.buildUrl("/todos/"+index), 
+     {headers: {token: this.$store.state.userToken}})
+     .then(() => {
+       this.loadToDos();
+     })
   }
-  showSignupModal() {
-    this.showSignup = true;
+  showNewItmModal() {
+    this.showNewItm = true;
   }
-  successSignup() {
-    this.showSignup = false;
+  success() {
+    this.showNewItm = false;
   }
-  cancelSignup() {
-    this.showSignup = false;
+  cancel() {
+    this.showNewItm = false;
   }
 }
 
@@ -123,8 +145,14 @@ interface ToDo {
   background-color: #f44336;
   color: white;
 }
+table, td, th {
+  border: 1px solid black;
+}
 table {
   border-collapse: collapse;
-  border: 1px solid black;
+  width: 100%;
+}
+th {
+  text-align: left;
 }
 </style>

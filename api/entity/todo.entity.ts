@@ -14,7 +14,7 @@ export class ToDo {
   @Column({default:null})
   public ddate!: Date;
 
-  @ManyToOne((type) => User, { cascade: true })
+  @ManyToOne((type) => User, user => user.todos, { cascade: true })
   @JoinColumn()
   public user!: User;
 }
