@@ -20,7 +20,7 @@
                     <td>{{index+1}}</td>
                     <td><span>{{todo.title}}</span></td>
                     <td><span>{{todo.duedate}}</span></td>
-                    <td><span>{{todo.completed}}</span></td>
+                    <td><span>{{todo.complete}}</span></td>
                     <td><button class="button" v-on:click="deleteItem(index)">x</button></td>
                 </tr>
             </table>
@@ -59,7 +59,7 @@ export default class ToDos extends Vue {
     new_item: ToDo = {
         name: "",
         duedate: new Date(),
-        completed: false,
+        complete: false,
     }
     */
 
@@ -92,7 +92,7 @@ export default class ToDos extends Vue {
             .post(APIConfig.buildUrl("/todos"), {
                 title: n.title,
                 duedate: n.duedate,
-                completed: false,
+                complete: false,
             })
             .then((response: AxiosResponse<ToDoResponse>)=> {
                 console.log("inside then you should work");
@@ -140,7 +140,7 @@ export default class ToDos extends Vue {
 interface ToDo {
     title: string;
     duedate: Date | undefined;
-    completed: boolean;
+    complete: boolean;
 }
 
 interface ToDoResponse{

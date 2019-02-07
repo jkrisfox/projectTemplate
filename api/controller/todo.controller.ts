@@ -22,7 +22,7 @@ export class ToDoController extends DefaultController{
                         const user = foundSession!.user;
                         todo.duedate = req.body.duedate;
                         todo.title = req.body.title;
-                        todo.completed = false;
+                        todo.complete = false;
                         todo.user = user;
                         todoRepo.save(todo).then((savedTodo: ToDo) => {
                             res.status(200).send({todo});
@@ -33,6 +33,17 @@ export class ToDoController extends DefaultController{
                 const todoRepo = getRepository(ToDo);
                 todoRepo.find().then((todo: ToDo[]) => {
                     res.status(200).send({ todo });
+                });
+            });
+
+            router.route("/todos/:id").put((req: Request, res: Response) => {
+                const todoRepo = getRepository(ToDo);
+                todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {
+                  // save updates here
+                  foundToDo.complete = req.body.complete;
+                  todoRepo.save(foundToDo).then((updatedTodo: ToDo) => {
+                    res.send(200).send({todo: updatedTodo});
+                  });
                 });
             });
 

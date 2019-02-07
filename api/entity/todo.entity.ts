@@ -10,7 +10,7 @@ export class ToDo {
     public title!: string;
 
     @Column({default: null})
-    public completed!:boolean;
+    public complete!:boolean;
 
     @Column({default: null})
     public duedate!: Date;

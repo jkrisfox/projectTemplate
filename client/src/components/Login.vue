@@ -30,9 +30,9 @@
 </template>
 
 <script lang="ts">
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Modal from "./Modal.vue";
 
 @Component({
@@ -48,25 +48,43 @@ export default class Signup extends Vue {
   error: string | boolean = false;
   @Prop(Boolean) isShowing: boolean = false;
 
+  @Watch("isShowing")
+  handleShowing(isShowingStart: boolean, isShowingEnd: boolean) {
+    if (!isShowingStart && isShowingEnd) {
+      this.signup = {
+        emailAddress: "",
+        password: ""
+      };
+    }
+  }
+
   success() {
     console.log("login success");
 
     this.error = false;
+<<<<<<< HEAD
     //debugger;
+=======
+>>>>>>> upstream/master
     axios
       .post(APIConfig.buildUrl("/login"), {
         emailAddress: this.signup.emailAddress,
         password: this.signup.password
       })
       .then((response: AxiosResponse<LoginResponse>) => {
-        this.$store.commit("login", {
+        this.$store.dispatch("login", {
           token: response.data.token,
           userid: response.data.userId
         });
         this.$emit("success");
       })
+<<<<<<< HEAD
       .catch((response: AxiosResponse) => {
         //this.error = response.data.error;
+=======
+      .catch((res: AxiosError) => {
+        this.error = res.response && res.response.data.error;
+>>>>>>> upstream/master
       });
   }
 

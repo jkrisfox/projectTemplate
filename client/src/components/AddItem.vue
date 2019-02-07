@@ -33,7 +33,7 @@ export default class Add_Item extends Vue {
   add_item: ToDo = {
     title: "",
     duedate: new Date(),
-    completed: false
+    complete: false
   };
 
   error: string | boolean = false;
@@ -61,6 +61,6 @@ export default class Add_Item extends Vue {
 interface ToDo {
   title: string;
   duedate: Date;
-  completed: boolean;
+  complete: boolean;
 }
 </script>
