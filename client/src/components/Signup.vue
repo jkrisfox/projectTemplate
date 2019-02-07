@@ -32,8 +32,6 @@
   </modal>
 </template>
 
-
-
 <script lang="ts">
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";

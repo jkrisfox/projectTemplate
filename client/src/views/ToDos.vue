@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <h2>New To-Do Item</h2>
+    <!-- <h2>New To-Do Item</h2>
     <form id="app">
       <label for="title">Title</label>
       <input type="text" id="title" placeholder="title" v-model="forms.title">
@@ -9,7 +9,7 @@
       <input type="text" id="ddate" placeholder="due date" v-model="forms.ddate">
 
     </form>
-          <button class="button button2" @click="addtoItem">Add</button>
+    <button class="button button2" @click="addtoItem">Add</button> -->
 
     <h2>My ToDoList:</h2>
 
@@ -27,10 +27,14 @@
         </td>
       </tr>
     </table>
-    <button class="button button2" v-on:click="addtoItem">Add</button>
-    <a href="\newItm" class="button button2">Add</a>
+    <!-- <button class="button button2" v-on:click="addtoItem">Add</button> -->
+    <a class="button is-primary" v-on:click="showSignupModal()"><strong>Add</strong></a>
 
-
+    <Signup
+      v-bind:is-showing="showSignup"
+      v-on:success="successSignup()"
+      v-on:cancel="cancelSignup()"
+    />
     <!-- <button class="button button2" v-on:click="addtoItem()">Save</button>
     <button class="button button3">Cancel</button> -->
    
@@ -40,8 +44,16 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-@Component
+import Signup from "@/components/newitem.vue";
+
+@Component({
+  components: {
+    Signup
+  }
+})
 export default class ToDos extends Vue {
+  public shownt: boolean = false;
+  public showSignup: boolean = false;
   mytodos: ToDo[] = [
     { name: "sleep", duedate: "Dec/17/2001" },
     { name: "A program", duedate: "Jan/30/2019" }
@@ -54,6 +66,18 @@ export default class ToDos extends Vue {
   }
   deleteItem(index : number) {
     this.mytodos.splice(index,1);
+  }
+
+  showSignupModal() {
+    this.showSignup = true;
+  }
+
+  successSignup() {
+    this.showSignup = false;
+  }
+
+  cancelSignup() {
+    this.showSignup = false;
   }
 }
 

@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import ToDos from "./views/ToDos.vue";
-import newItm from "./views/newitem.vue";
+import newItm from "./components/newitem.vue";
 import MyProfile from "./views/MyProfile.vue";
 
 Vue.use(Router);
