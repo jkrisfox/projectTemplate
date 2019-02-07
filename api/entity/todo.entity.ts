@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumnm} from "typeorm";
+import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -6,13 +6,13 @@ export class ToDo {
     @PrimaryGeneratedColumn()
     public id!: number;
 
-    @Column()
+    @Column({default: null})
     public title!: string;
 
-    @Column()
-    public complete!:boolean;
+    @Column({default: null})
+    public completed!:boolean;
 
-    @Column()
+    @Column({default: null})
     public duedate!: Date;
 
     //todo belongs to a user

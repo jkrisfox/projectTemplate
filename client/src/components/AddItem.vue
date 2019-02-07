@@ -6,7 +6,7 @@
       <div class="field">
         <label class="label">Item</label>
         <div class="control">
-          <input class="input" type="text" id="n" placeholder="what do you need to do?" v-model="add_item.name"/>
+          <input class="input" type="text" id="n" placeholder="what do you need to do?" v-model="add_item.title"/>
           <!--<input class="input" type="text" placeholder="what do you need to do?" v-bind="add_item.new_item"/>-->
         </div>
       </div>
@@ -32,8 +32,9 @@ import Modal from "./Modal.vue";
 })
 export default class Add_Item extends Vue {
   add_item: ToDo = {
-    name: "",
-    duedate: new Date()
+    title: "",
+    duedate: new Date(),
+    completed: false
   };
 
   error: string | boolean = false;
@@ -41,7 +42,7 @@ export default class Add_Item extends Vue {
 
   success() {
     this.error = false; 
-    console.log("adding item: " + this.add_item.name +", due: " + this.add_item.duedate);
+    console.log("adding item: " + this.add_item.title +", due: " + this.add_item.duedate);
     this.$emit("success",this.add_item);
     this.clearForm();
   }
@@ -53,13 +54,14 @@ export default class Add_Item extends Vue {
   }
 
   clearForm(){
-    this.add_item.name="";
+    this.add_item.title="";
     this.add_item.duedate = new Date();
   }
 }
 
 interface ToDo {
-  name: string;
+  title: string;
   duedate: Date;
+  completed: boolean;
 }
 </script>

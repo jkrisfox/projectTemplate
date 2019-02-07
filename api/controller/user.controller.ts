@@ -75,13 +75,15 @@ export class UserController extends DefaultController {
       const token: string | undefined = req.get("token");
       if (token) {
         const sessionRepo = getRepository(Session);
-        sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
-          if (
-            foundSession &&
-            ((checkSameUser && foundSession.user.id === req.params.id) ||
-              !checkSameUser) &&
-            foundSession.expiresAt.getTime() > new Date().getTime()
-          ) {
+        sessionRepo
+          .findOne(token,{relations: ["user"]})
+          .then((foundSession: Session | undefined) => {
+              if (
+                foundSession &&
+                ((checkSameUser && foundSession.user.id === req.params.id) ||
+                  !checkSameUser) &&
+                foundSession.expiresAt.getTime() > new Date().getTime()
+              ) {
             next();
           } else {
             res.status(403);
