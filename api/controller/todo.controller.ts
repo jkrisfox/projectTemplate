@@ -11,15 +11,23 @@ export class ToDoController extends DefaultController {
   protected initializeRoutes(): express.Router {
     const router = express.Router();
 
-    router.route("/todos").post((req: Request, res: Response) => {
+    router.route("/todos")
+    .get((req: Request, res: Response) => {
+      const itemRepo = getRepository(ToDo);
+      itemRepo.find().then((items: ToDo[]) => {
+        res.status(200).send({ items });
+      });
+    })
+    .post((req: Request, res: Response) => {
       const token = req.get("token");
       const sessionRepo = getRepository(Session);
       const todoRepo = getRepository(ToDo);
       const todo = new ToDo();
       sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
         const user = foundSession!.user;
-        todo.dueDate = req.body.dueDate;
-        todo.title = req.body.title;
+        todo.date = req.body.date;
+        todo.data = req.body.data;
+        todo.complete = req.body.complete;
         todo.user = user;
         todoRepo.save(todo).then((savedTodo: ToDo) => {
           res.status(200).send({ todo });
