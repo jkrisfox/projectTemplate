@@ -1,13 +1,10 @@
 <template>
   <div id="app">
-    <div class="navbar">
+    <div class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-menu">
         <div class="navbar-start">
           <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link>
           <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
-          <!-- wait... what is this??? -->
-          <!-- we got our todo, theres the path... it matches the path in router.ts -->
-          <router-link class="navbar-item is-tab" to="/todos" exact-active-class="is-active">My ToDos</router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -42,7 +39,6 @@
 import axios from "axios";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-//  importing the modals???????
 import Signup from "@/components/Signup.vue";
 import Login from "@/components/Login.vue";
 import { APIConfig } from "@/utils/api.utils";
@@ -82,17 +78,17 @@ export default class App extends Vue {
   }
 
   get isLoggedIn(): boolean {
-    return !!this.$store.state.userId;
+    return !!this.$store.state.user;
   }
 
   logout() {
-    debugger;
     axios
       .post(APIConfig.buildUrl("/logout"), null, {
         headers: { token: this.$store.state.userToken }
       })
       .then(() => {
         this.$store.commit("logout");
+        this.$router.push({ name: "home" });
       });
   }
 }

@@ -4,4 +4,5 @@ export interface iUser {
   emailAddress: string;
   password: string;
   id: number;
+  profileUrl: string;
 }
