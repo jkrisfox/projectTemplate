@@ -2,7 +2,6 @@ import DefaultController from "./default.controller";
 
 import { NextFunction, Request, Response, Router } from "express";
 import express from "express";
-<<<<<<< HEAD
 import { getRepository } from "typeorm";
 
 import { Session, ToDo } from "../entity"
@@ -14,13 +13,19 @@ export class TodoController extends DefaultController {
         router.route("/todos")
             .get((req: Request, res: Response) => {
                 const token = req.get("token");
+                console.log("token:")
+                console.log(token)
                 const sessionRepo = getRepository(Session);
                 const todoRepo = getRepository(ToDo);
                 const todos: ToDo[] = []
                 sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
-                    if (foundSession) {
+                    if (foundSession != undefined) {
                         const user = foundSession.user;
-                        todoRepo.find({where: {user: user}}).then((foundTodos: ToDo[] | undefined) => {
+                        console.log("session:")
+                        console.log(foundSession)
+                        console.log("user:")
+                        console.log(user);
+                        todoRepo.find({where: {userId: user.id}}).then((foundTodos: ToDo[] | undefined) => {
                             if (foundTodos) {
                                 res.status(200).send({foundTodos})
                             } else {
@@ -37,10 +42,13 @@ export class TodoController extends DefaultController {
                 const todo = new ToDo();
                 sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
                     if (foundSession) {
+                        console.log(req.body)
                         const user = foundSession.user;
-                        todo.duedate = req.body.dueDate;
+                        todo.duedate = req.body.duedate;
                         todo.title = req.body.title;
+                        todo.completed = false;
                         todo.user = user;
+                        console.log(user);
                         todoRepo.save(todo).then((savedTodo: ToDo) => {
                             res.status(200).send({savedTodo});
                         });
@@ -63,39 +71,3 @@ export class TodoController extends DefaultController {
         return router
     }
 }
-=======
-
-import { Session, ToDo } from "../entity";
-
-import { getRepository } from "typeorm";
-
-export class ToDoController extends DefaultController {
-  protected initializeRoutes(): express.Router {
-    const router = express.Router();
-
-    router.route("/todos").post((req: Request, res: Response) => {
-      const token = req.get("token");
-      const sessionRepo = getRepository(Session);
-      const todoRepo = getRepository(ToDo);
-      const todo = new ToDo();
-      sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
-        const user = foundSession!.user;
-        todo.dueDate = req.body.dueDate;
-        todo.title = req.body.title;
-        todo.user = user;
-        todoRepo.save(todo).then((savedTodo: ToDo) => {
-          res.status(200).send({ todo });
-        });
-      });
-      router.route("/todos/:id").put((req: Request, res: Response) => {
-        const todoRepo = getRepository(ToDo);
-        todo.findOne(req.params.id).then((foundToDo: ToDo) => {
-          // save updates here
-        });
-      });
-    });
-
-    return router;
-  }
-}
->>>>>>> 741e3335db43397093bd5c5fd609569345cb4687

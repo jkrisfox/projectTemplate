@@ -66,7 +66,9 @@ export default class ToDos extends Vue {
 
   mounted() {
     axios.get(APIConfig.buildUrl("/todos"), {}).then((response: AxiosResponse<ToDo[]>) => {
-      this.mytodos = response.data
+      console.log(response)
+      console.log(response.data)
+      this.mytodos.concat(response.data)
     }).catch((response: AxiosResponse) => {
       console.log("error getting stuff");
     })
@@ -80,6 +82,7 @@ export default class ToDos extends Vue {
 
   showAddModal() {
     this.isVisible = true;
+    console.log("Opened")
   }
 
   hideAddModal() {
@@ -97,9 +100,11 @@ export default class ToDos extends Vue {
       duedate: newTodo.duedate,
       completed: newTodo.completed
     }).then((response: AxiosResponse<ToDo>) => {
+      console.log(response)
+      console.log(response.data)
       this.mytodos.push(response.data)
     }).catch((response: AxiosResponse) => {
-      console.log(response.data.error)
+      console.log(response)
     });
     this.hideAddModal();
   }
@@ -163,4 +168,3 @@ th {
   margin-bottom: 10px;
 }
 </style>
-
