@@ -48,30 +48,19 @@ export class ToDoController extends DefaultController {
     }).get((req: Request, res: Response) => {
       const { todoRepo, sessionRepo, foundUser } = res.locals;
       console.log(foundUser);
-      todoRepo.find({ where: [{ user: foundUser.id }]}).then((results: ToDo[]) => {
-        res.status(200).send(results);
+      todoRepo.find({ where: [{ user: foundUser }]}).then((results: ToDo[]) => {
+        console.log(results);
+        res.status(200).send({results});
       });
     });
-<<<<<<< HEAD
 
     router.route("/todos/:id").put((req: Request, res: Response) => {
       const { title, dueDate, completed } = req.body;
       const { todoRepo, sessionRepo, foundUser } = res.locals;
       todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {
-        foundToDo.title = title;
-        foundToDo.dueDate = dueDate;
         foundToDo.complete = completed;
         todoRepo.save(foundToDo).then(() => {
           res.status(200).send(foundToDo);
-=======
-    router.route("/todos/:id").put((req: Request, res: Response) => {
-      const todoRepo = getRepository(ToDo);
-      todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {
-        // save updates here
-        foundToDo.complete = req.body.complete;
-        todoRepo.save(foundToDo).then((updatedTodo: ToDo) => {
-          res.send(200).send({todo: updatedTodo});
->>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7
         });
       });
     }).delete((req: Request, res: Response) => {
@@ -91,6 +80,7 @@ export class ToDoController extends DefaultController {
         }
       });
     });
+
     return router;
   }
 }

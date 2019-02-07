@@ -2,6 +2,7 @@
   <div class="todo">
     <table class="table is-bordered is-striped">
       <thead class="is-primary">
+      <p v-if="error" class="help is-danger">{{error}}</p>
       <tr> <th>Task</th><th>Due Date</th><th>Completed</th><th></th></tr>
       </thead>
       <tbody>
@@ -16,7 +17,6 @@
         </td>
         <td>
             <button class="button is-danger is-small" v-on:click="deleteItem(todo.id)">-</button>
-
         </td>
       </tr> 
       </tbody>
@@ -57,11 +57,11 @@ import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 import { iToDo } from "../models/todo.interface";
 import { ToDoList } from "../models/todoList";
-import { iUser } from '../models/user.interface';
+import { iUser } from "../models/user.interface";
+import { ToDo } from "../../../api/entity";
 
 @Component
 export default class ToDos extends Vue {
-<<<<<<< HEAD
   error: string | boolean = false;
   nameError: string | boolean = false;
   dateError: string | boolean = false;
@@ -73,7 +73,7 @@ export default class ToDos extends Vue {
     this.error = false;
     this.nameError = this.newToDoTitle === "";
     this.dateError = this.newDueDate === "";
-    if(this.dateError || this.nameError) {
+    if (this.dateError || this.nameError) {
       return;
     }
 
@@ -93,7 +93,7 @@ export default class ToDos extends Vue {
         this.newDueDate = "";
       })
       .catch(response => {
-        this.error = response.message;
+        this.error = response;
       });
   }
 
@@ -104,36 +104,40 @@ export default class ToDos extends Vue {
         headers: { token: this.$store.state.userToken }
       })
       .then((response: AxiosResponse<ToDoResponse>) => {
-        this.todos = this.todos.filter((t:iToDo) => {
+        this.todos = this.todos.filter((t: iToDo) => {
           return t.id != response.data.id;
-        })
+        });
         this.$emit("success");
       })
       .catch(response => {
-        this.error = response.message;
+        this.error = response;
       });
   }
 
   completeItem(item: iToDo) {
     this.error = false;
     axios
-      .put(APIConfig.buildUrl(`/todos/${item.id}`), {
+      .put(
+        APIConfig.buildUrl(`/todos/${item.id}`),
+        {
           title: item.title,
           dueDate: item.dueDate,
           completed: !item.complete
-      }, {
-        headers: { token: this.$store.state.userToken }
-      })
+        },
+        {
+          headers: { token: this.$store.state.userToken }
+        }
+      )
       .then((response: AxiosResponse<ToDoResponse>) => {
         this.todos.forEach((item: iToDo) => {
-          if(item.id == response.data.id) {
+          if (item.id == response.data.id) {
             item.complete = response.data.complete;
           }
-        })
+        });
         this.$emit("success");
       })
       .catch(response => {
-        this.error = response.message;
+        this.error = response;
       });
   }
 
@@ -147,55 +151,55 @@ export default class ToDos extends Vue {
       .get(APIConfig.buildUrl("/todos"), {
         headers: { token: this.$store.state.userToken }
       })
-      .then((response: AxiosResponse<{ todos: ToDoList }>) => {
-        this.todos = response.data.todos.list;
+      .then((response: AxiosResponse<ToDoListResponse>) => {
+        response.data.results.forEach((todo: ToDo) => {
+          this.todos.push(todo);
+        });
         this.$emit("success");
       })
       .catch(response => {
-        this.error = response.message;
+        this.error = response;
       });
   }
 
-  @Watch('token')
-  handleTokenChange(newToken: string, oldToken: string) {
-    if(!newToken){
+  created() {
+    if (!this.$store.state.userToken) {
       this.todos = [];
-    } else if (oldToken != newToken){
+    } else {
+      this.fetchList();
+    }
+  }
+  @Watch("token")
+  handleTokenChange(newToken: string, oldToken: string) {
+    if (!newToken) {
+      this.todos = [];
+    } else if (oldToken != newToken) {
       console.log("changing");
       this.fetchList();
     }
-=======
-  mytodos: ToDo[] = [
-    { name: "Tod one", duedate: undefined },
-    { name: "todo two", duedate: undefined },
-    { name: "todo three", duedate: undefined }
-  ];
-  addTodoItem() {
-    this.mytodos.push({
-      name: `todo${new Date().getTime()}`,
-      duedate: undefined
-    });
->>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7
   }
 }
 
 interface ToDoResponse {
-  title: string,
-  dueDate: string,
-  id: number,
-  complete: boolean,
+  title: string;
+  dueDate: string;
+  id: number;
+  complete: boolean;
   user: iUser;
+}
+interface ToDoListResponse {
+  results: ToDo[];
 }
 
 function reorderDate(date: string) {
   let sDate = date.split("-");
   return sDate[2] + "-" + sDate[1] + "-" + sDate[0];
-}  
+}
 </script>
 
 <style scoped>
 .todo {
-  padding-top: 10% ;
+  padding-top: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
