@@ -61,6 +61,7 @@ import { APIConfig } from "../utils/api.utils";
   }
 })
 export default class ToDos extends Vue {
+<<<<<<< HEAD
   @Prop(Boolean) isVisible = false;
   mytodos: ToDo[] = [];
 
@@ -115,6 +116,18 @@ export default class ToDos extends Vue {
 
   cancel() {
     this.hideAddModal();
+=======
+  mytodos: ToDo[] = [
+    { name: "Tod one", duedate: undefined },
+    { name: "todo two", duedate: undefined },
+    { name: "todo three", duedate: undefined }
+  ];
+  addTodoItem() {
+    this.mytodos.push({
+      name: `todo${new Date().getTime()}`,
+      duedate: undefined
+    });
+>>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7
   }
 }
 
@@ -126,6 +139,7 @@ interface ToDo {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 table {
   width: 500px;
   margin-left: 30px;
@@ -168,3 +182,6 @@ th {
   margin-bottom: 10px;
 }
 </style>
+=======
+</style>
+>>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7

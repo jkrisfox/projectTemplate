@@ -18,7 +18,7 @@ export class TodoController extends DefaultController {
                 const sessionRepo = getRepository(Session);
                 const todoRepo = getRepository(ToDo);
                 const todos: ToDo[] = []
-                sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
+                sessionRepo.findOne({where: token, relations: ["user"]}).then((foundSession: Session | undefined) => {
                     if (foundSession != undefined) {
                         const user = foundSession.user;
                         console.log("session:")
