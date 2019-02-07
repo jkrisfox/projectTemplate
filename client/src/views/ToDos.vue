@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 import { Component } from "vue-property-decorator";
 @Component
 export default class ToDos extends Vue {
@@ -24,13 +24,16 @@ export default class ToDos extends Vue {
     duedate: undefined
   };
   mytodos: ToDo[] = [
-    {name: "todo one", duedate: new Date('2011-04-11')},
-    {name: "todo two", duedate: new Date('2011-04-11')},
-    {name: "todo three", duedate: new Date('2011-04-11')}
+    { name: "todo one", duedate: new Date("2011-04-11") },
+    { name: "todo two", duedate: new Date("2011-04-11") },
+    { name: "todo three", duedate: new Date("2011-04-11") }
   ];
   addTodoItem() {
+    if (!this.todo.duedate) {
+      return;
+    }
     const duedate = new Date(this.todo.duedate);
-    this.mytodos.push({name: this.todo.name, duedate: duedate});
+    this.mytodos.push({ name: this.todo.name, duedate: duedate });
   }
   deleteTodoItem() {
     this.mytodos.pop();
@@ -44,8 +47,10 @@ interface ToDo {
 </script>
 
 <style scoped>
-  table, th, td {
-    border: 1px solid black;
-    padding: 5px;
-  }
+table,
+th,
+td {
+  border: 1px solid black;
+  padding: 5px;
+}
 </style>
