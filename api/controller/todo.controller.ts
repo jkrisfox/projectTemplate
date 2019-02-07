@@ -8,35 +8,33 @@ import {getRepository } from "typeorm";
 
 export class ToDoController extends DefaultController{
     protected initializeRoutes(): express.Router{
-        const router = express.Router();
+        const router = Router();
 
-        router.route("/todos").post((req:Request,res:Response) => {
-            const token = req.get("token");
-            const sessionRepo = getRepository(Session);
-            const todoRepo = getRepository(ToDo);
-            const todo = new ToDo();
-
-            sessionRepo.findOne(token).then((foundSession: Session | undefined) =>{
-                const user = foundSession!.user;
-                todo.duedate = req.body.duedate;
-                todo.name = req.body.name;
-                todo.user = user;
-                todoRepo.save(todo).then((savedTodo: ToDo) => {
-                    res.status(200).send({todo});
+        debugger;
+        router.route("/todos")
+            .post((req:Request,res:Response) => {
+                const token = req.get("token");
+                const sessionRepo = getRepository(Session);
+                const todoRepo = getRepository(ToDo);
+                const todo = new ToDo();
+                sessionRepo.findOne(token)
+                    .then((foundSession: Session | undefined) =>{
+                        const user = foundSession!.user;
+                        todo.duedate = req.body.duedate;
+                        todo.title = req.body.title;
+                        todo.completed = false;
+                        todo.user = user;
+                        todoRepo.save(todo).then((savedTodo: ToDo) => {
+                            res.status(200).send({todo});
+                    });
+                });
+            })
+            .get((req: Request, res: Response) => {
+                const todoRepo = getRepository(ToDo);
+                todoRepo.find().then((todo: ToDo[]) => {
+                    res.status(200).send({ todo });
                 });
             });
-        });
-
-        router.route("/todos/:id").put((req:Request, res:Response)=> {
-            const todoRepo = getRepository(ToDo);
-            todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {
-                //save updates here
-                foundToDo.complete = req.body.complete;
-                todoRepo.save(foundToDo).then((updatedToDo: ToDo) => {
-                    res.send(200).send({todo:updatedToDo});
-                });
-            });
-        });
 
          return router;
     }

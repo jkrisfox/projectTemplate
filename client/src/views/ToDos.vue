@@ -18,9 +18,9 @@
                 </tr>
                 <tr v-for="(todo,index) in mytodos" v-bind:key="index">
                     <td>{{index+1}}</td>
-                    <td><span>{{todo.name}}</span></td>
+                    <td><span>{{todo.title}}</span></td>
                     <td><span>{{todo.duedate}}</span></td>
-                    <td><span>{{todo.complete}}</span></td>
+                    <td><span>{{todo.completed}}</span></td>
                     <td><button class="button" v-on:click="deleteItem(index)">x</button></td>
                 </tr>
             </table>
@@ -41,11 +41,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop} from "vue-property-decorator";
+import AddItem from "@/components/AddItem.vue";
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
-
-import AddItem from "@/components/AddItem.vue";
-import Axios from 'axios';
 
 @Component({
   components: {
@@ -57,52 +55,38 @@ export default class ToDos extends Vue {
     public showAddItem: boolean = false;
     error: string | boolean = false;
 
-    //fill this with data from the database?
-    mytodos: ToDo[] = [];
-
+    /* 
     new_item: ToDo = {
         name: "",
         duedate: new Date(),
-        complete: false,
+        completed: false,
     }
+    */
 
-    //irrelevant
-    addToDoItem(){
-        this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined, complete: false});
-    }
+    mytodos: () => any[] =
+         function(){ 
+        //this.error = false;
+        //debugger;
+        console.log("getting todo items");
+        axios
+            .get(APIConfig.buildUrl("/todos"))
+            .then((response:AxiosResponse) => {
+                console.log(response.data);
+                console.log(JSON.stringify(response.data))
+                return response.data;
+            })
+            .catch((response:AxiosResponse) => {
+                //this.error = response.data.error;
+                console.log(this.error);
+            });
 
-    deleteItem(ind: number){
-        this.mytodos.splice(ind,1);
-    }
+        return [];
+         
+    };
 
     successAdditem(n:ToDo){
-        //console.log("@success add item");
-        //console.log(n);
-
-        //get rid of this later
-        this.mytodos.push({name: n.name, duedate: n.duedate, complete: false});
-
-        //adding new item to database
-        this.error = false;
-        axios
-        .post(APIConfig.buildUrl("/todos"), {
-            name: n.name,
-            duedate: n.duedate,
-        })
-        .then((response: AxiosResponse<ToDoResponse>) => {
-            this.$store.commit("todo", {
-                token: response.data.token,
-                todoId: response.data.todoId,
-                //name: response.data.name,
-                //duedate: response.data.duedate,
-            });
-            //this.$emit("Success");
-        })
-        .catch((response: AxiosResponse) => {
-            debugger;
-            this.error = response.data.error;
-        });
-
+        //this.mytodos.push({name: n.name, duedate: n.duedate});
+        this.addToDoItem(n);    //push to database
         this.showAddItem = false;
     }
     cancelAddItem(){
@@ -112,19 +96,54 @@ export default class ToDos extends Vue {
         this.showAddItem = true;
     }
 
+    
+    deleteItem(ind: number){
+        //this.mytodos.splice(ind,1);
+        console.log("delete item");
+    }
+
+    addToDoItem(n: ToDo){
+        this.error=false;
+        //console.log(n.title);
+        //debugger;
+        axios
+            .post(APIConfig.buildUrl("/todos"), {
+                title: n.title,
+                duedate: n.duedate,
+                completed: false,
+            })
+            .then((response: AxiosResponse<ToDoResponse>)=> {
+                console.log("inside then you should work");
+                this.$store.commit("todo", {
+                    token: response.data.token,
+                    ToDoId: response.data.ToDoId,
+                });
+                //this.$emit("success");
+            })
+            .catch((response: AxiosResponse) => {
+                //this.error = errorResponse.response.data.reason;
+                console.log("error");
+                //console.log(this.error);
+            });
+    }   
+
+    
+    /*
+    addToDoItem(){
+        this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
+    }
+    */
 }
 
 interface ToDo {
-    name: string;
+    title: string;
     duedate: Date | undefined;
-    complete: boolean,
+    completed: boolean;
 }
 
-interface ToDoResponse {
+interface ToDoResponse{
     token: string;
-    todoId: string;
-    //name: string;
-    //duedate: Date;
+    ToDoId: string;
 }
 
 </script>
@@ -152,7 +171,7 @@ h1 {
 }
 
 table {
-    width: 50%;
+    width: 60%;
     margin: auto;
 }
 

@@ -6,13 +6,13 @@ export class ToDo {
     @PrimaryGeneratedColumn()
     public id!: number;
 
-    @Column()
-    public name!: string;
+    @Column({default: null})
+    public title!: string;
 
-    @Column()
-    public complete!:boolean;
+    @Column({default: null})
+    public completed!:boolean;
 
-    @Column()
+    @Column({default: null})
     public duedate!: Date;
 
     //todo belongs to a user
