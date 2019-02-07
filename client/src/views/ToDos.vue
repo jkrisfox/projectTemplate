@@ -38,8 +38,8 @@ var date
 @Component
 export default class ToDos extends Vue {
     mytodos: ToDo[] = [
-        {name: "yay", duedate:(new Date("2015-3-25"))},
-        {name: "yay2", duedate:new Date("2019-2-14")}
+        {name: "item1", duedate:(new Date("2015-3-25"))},
+        {name: "item2", duedate:new Date("2019-2-14")}
     ];
     addToDoItem() {
         this.mytodos.push({name: `todo${new Date().getTime()}`, duedate:undefined});
