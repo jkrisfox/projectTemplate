@@ -11,7 +11,7 @@
         <div class="field">
           <label class="label">Add Item</label>
           <div class="control">
-            <input class="input" type="text" placeholder="add item" v-model="newItem.name">
+            <input class="input" type="text" placeholder="add item" v-model="newItem.title">
           </div>
         </div>
         <div class="field">
@@ -34,12 +34,12 @@
         <tr v-for="(todo, index) in mytodos" v-bind:key="index" class="to-do-row">
           <td class="option-col">
             <input type="checkbox" name="option{index}">
-            {{ todo.name }}
+            {{ todo.title }}
             <br>
           </td>
           <td class="due-date">{{ todo.duedate }}</td>
           <td class="delete">
-            <button v-on:click="deleteToDoItem(index)" class="button">Delete</button>
+            <button class="button">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -61,22 +61,23 @@ import { APIConfig } from "../utils/api.utils";
   }
 })
 export default class ToDos extends Vue {
-<<<<<<< HEAD
   @Prop(Boolean) isVisible = false;
   mytodos: ToDo[] = [];
 
   mounted() {
     axios.get(APIConfig.buildUrl("/todos"), {}).then((response: AxiosResponse<ToDo[]>) => {
-      console.log(response)
-      console.log(response.data)
-      this.mytodos.concat(response.data)
+      for (var i = 0; i < response.data.length; i++) {
+        const item: ToDo = response.data[i]
+        console.log(item)
+        this.mytodos.push(item)
+      }
     }).catch((response: AxiosResponse) => {
       console.log("error getting stuff");
     })
   }
 
   newItem: ToDo = {
-    name: "",
+    title: "",
     duedate: undefined,
     completed: false
   };
@@ -92,54 +93,36 @@ export default class ToDos extends Vue {
 
   addToDoItem() {
     const newTodo: ToDo = {
-      name: this.newItem.name,
+      title: this.newItem.title,
       duedate: this.newItem.duedate,
       completed: this.newItem.completed
     }
     axios.post(APIConfig.buildUrl("/todos"), {
-      title: newTodo.name,
+      title: newTodo.title,
       duedate: newTodo.duedate,
       completed: newTodo.completed
     }).then((response: AxiosResponse<ToDo>) => {
-      console.log(response)
-      console.log(response.data)
-      this.mytodos.push(response.data)
+      debugger;
+      this.mytodos.push(response.data);
     }).catch((response: AxiosResponse) => {
       console.log(response)
     });
     this.hideAddModal();
   }
 
-  deleteToDoItem(index: number) {
-    this.mytodos.splice(index, 1);
-  }
-
   cancel() {
     this.hideAddModal();
-=======
-  mytodos: ToDo[] = [
-    { name: "Tod one", duedate: undefined },
-    { name: "todo two", duedate: undefined },
-    { name: "todo three", duedate: undefined }
-  ];
-  addTodoItem() {
-    this.mytodos.push({
-      name: `todo${new Date().getTime()}`,
-      duedate: undefined
-    });
->>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7
   }
 }
 
 interface ToDo {
-  name: string;
+  title: string;
   duedate: Date | undefined;
   completed: boolean;
 }
 </script>
 
 <style scoped>
-<<<<<<< HEAD
 table {
   width: 500px;
   margin-left: 30px;
@@ -182,6 +165,3 @@ th {
   margin-bottom: 10px;
 }
 </style>
-=======
-</style>
->>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7

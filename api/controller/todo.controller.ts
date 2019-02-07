@@ -13,21 +13,16 @@ export class TodoController extends DefaultController {
         router.route("/todos")
             .get((req: Request, res: Response) => {
                 const token = req.get("token");
-                console.log("token:")
-                console.log(token)
                 const sessionRepo = getRepository(Session);
                 const todoRepo = getRepository(ToDo);
                 const todos: ToDo[] = []
                 sessionRepo.findOne({where: token, relations: ["user"]}).then((foundSession: Session | undefined) => {
                     if (foundSession != undefined) {
                         const user = foundSession.user;
-                        console.log("session:")
-                        console.log(foundSession)
-                        console.log("user:")
-                        console.log(user);
                         todoRepo.find({where: {userId: user.id}}).then((foundTodos: ToDo[] | undefined) => {
+                            console.log(foundTodos)
                             if (foundTodos) {
-                                res.status(200).send({foundTodos})
+                                res.status(200).send(foundTodos)
                             } else {
                                 res.status(404);
                             }
@@ -40,7 +35,7 @@ export class TodoController extends DefaultController {
                 const sessionRepo = getRepository(Session);
                 const todoRepo = getRepository(ToDo);
                 const todo = new ToDo();
-                sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
+                sessionRepo.findOne({where: token, relations: ["user"]}).then((foundSession: Session | undefined) => {
                     if (foundSession) {
                         console.log(req.body)
                         const user = foundSession.user;
@@ -50,7 +45,7 @@ export class TodoController extends DefaultController {
                         todo.user = user;
                         console.log(user);
                         todoRepo.save(todo).then((savedTodo: ToDo) => {
-                            res.status(200).send({savedTodo});
+                            res.status(200).send(savedTodo);
                         });
                     } else {
                         res.status(404);
