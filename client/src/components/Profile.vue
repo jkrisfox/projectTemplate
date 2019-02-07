@@ -57,22 +57,18 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { APIConfig } from "@/utils/api.utils";
 import { iUser } from "@/models/user.interface";
-
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
 const STATUS_SUCCESS = 2;
 const STATUS_FAILED = 3;
-
 @Component
 export default class Profile extends Vue {
   fileCount: number = 0;
   currentStatus: number | null = null;
   uploadError: string | null = null;
   uploadedFile: any = null;
-
   @Prop({ default: null })
   user!: iUser | null;
-
   upload(formData: FormData) {
     if (this.user) {
       const url = `${APIConfig.url}/users/${this.user.id}`;
@@ -86,7 +82,6 @@ export default class Profile extends Vue {
     }
     return Promise.reject({ response: "no user logged in" });
   }
-
   save(formData: FormData) {
     // upload data to the server
     this.currentStatus = STATUS_SAVING;
@@ -99,52 +94,41 @@ export default class Profile extends Vue {
         this.currentStatus = STATUS_FAILED;
       });
   }
-
   filesChanged(event: any) {
     const name = event.target.name;
     const files = event.target.files;
     this.fileCount = event.target.files.length;
     // handle file changes
     const formData = new FormData();
-
     if (!files.length) return;
-
     // append the files to FormData
     Array.from(Array(files.length).keys()).map(x => {
       formData.append(name, files[x], files[x].name);
     });
-
     // save it
     this.save(formData);
   }
-
   reset() {
     // reset form to initial state
     this.currentStatus = STATUS_INITIAL;
     this.uploadError = null;
   }
-
   mounted() {
     this.reset();
   }
-
   //computed
   get isInitial() {
     return this.currentStatus === STATUS_INITIAL;
   }
-
   get isSaving() {
     return this.currentStatus === STATUS_SAVING;
   }
-
   get isSuccess() {
     return this.currentStatus === STATUS_SUCCESS;
   }
-
   get isFailed() {
     return this.currentStatus === STATUS_FAILED;
   }
-
   get profileUrl(): string {
     if (this.user) {
       return APIConfig.buildUrl(`/${this.user.profileUrl}`);
