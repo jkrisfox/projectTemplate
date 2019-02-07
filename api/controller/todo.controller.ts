@@ -11,7 +11,14 @@ export class ToDoController extends DefaultController {
   protected initializeRoutes(): express.Router {
     const router = express.Router();
 
-    router.route("/todos").post((req: Request, res: Response) => {
+    router.route("/todos")
+    .get((req: Request, res: Response) => {
+      const itemRepo = getRepository(ToDo);
+      itemRepo.find().then((items: ToDo[]) => {
+        res.status(200).send({ items });
+      });
+    })
+    .post((req: Request, res: Response) => {
       const token = req.get("token");
       const sessionRepo = getRepository(Session);
       const todoRepo = getRepository(ToDo);
@@ -26,6 +33,7 @@ export class ToDoController extends DefaultController {
         });
       });
     });
+
     router.route("/todos/:id").put((req: Request, res: Response) => {
       const todoRepo = getRepository(ToDo);
       todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {

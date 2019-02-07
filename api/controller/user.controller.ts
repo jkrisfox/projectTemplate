@@ -91,6 +91,7 @@ export class UserController extends DefaultController {
                 !checkSameUser) &&
               foundSession.expiresAt.getTime() > new Date().getTime()
             ) {
+              console.log(foundSession.user);
               next();
             } else {
               res.sendStatus(403);

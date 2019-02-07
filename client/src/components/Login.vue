@@ -1,5 +1,7 @@
 <template>
-  <modal
+  <!-- inherits the modal class -->
+  <!-- TODO: use this to put todos into the database -->
+  <modal 
     v-bind:is-showing="isShowing"
     title="Login"
     success-button="Login"
@@ -61,6 +63,7 @@ export default class Signup extends Vue {
   success() {
     this.error = false;
     axios
+      // send a post request to axios and do stuff depending on the response
       .post(APIConfig.buildUrl("/login"), {
         emailAddress: this.signup.emailAddress,
         password: this.signup.password
