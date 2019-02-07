@@ -1,17 +1,16 @@
 <template>
     <div class='todos'>
-        <h1>My To Do List</h1><br><br>
-        <form class="additem">
-            <input type="text" id="myTitle" name="fname" placeholder="New To Do Item" v-model="item.name">
-            <input type="text" id="myDueDate" name="lname" placeholder="Due Date" v-model="item.date">
+        <h1>To Do List</h1><br><br>
+        <form class="additem" >
+            <table id="myTable" style="width:100%">
+                <tr>
+                    <th><input type="text" id="myTitle" name="fname" placeholder="New To Do Item"  style="width:100%" v-model="item.name"></th>
+                    <th><input type="text" id="myDueDate" name="lname" placeholder="Due Date" style="width:100%" v-model="item.date"></th>
+                    <th><button class="button"  style="width:100%" v-on:click="addTodoItem" >Add</button></th>
+               </tr>
+        </table>
         </form>
         <table id="myTable" style="width:100%">
-            <tr>
-                <th></th>
-                <th>Task</th>
-                <th>Due Date</th>
-                <th><button class="button" v-on:click="addTodoItem" >Add</button></th>
-            </tr>
             <tr v-for="(todo, index) in mytodos" v-bind:key="index">
                 <td><input type="checkbox"></td>
                 <td>{{todo.title}}</td>
@@ -29,46 +28,60 @@ import { Component } from 'vue-property-decorator';
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 import { iItem } from "../models/item.interface";
+import { iToDo } from "../models/todo.interface";
+import { iUser } from "../models/user.interface";
+
+
 @Component
 export default class ToDos extends Vue{
     public showAdd: boolean = false;
     item: itemform = {
         name: "",
-        date: ""
+        date: "",
+        complete: false,
+
     };
+
+    get user() {
+        return this.$store.state.user;
+    }
 
     mytodos: ToDo[] = [];
 
     error: string | boolean = false;
 
     addTodoItem(){
-        this.error = false;
-        console.log('hello');
-        axios
-        .post(APIConfig.buildUrl("/items"), {
-            ...this.item
-        })
-        .then((response: AxiosResponse<{item: iItem}>) => {
-            debugger;
-            this.item.name = "";
-            this.item.date = "";
-            const { title, date, id } = response.data.item;
-            this.mytodos.push({title, date: new Date (date), id});
-            this.$emit("success");
-        })
-        .catch((reason: any) => {
-            this.error = reason;
-            this.item.name = "";
-            this.item.date = "";
-        });
+        if (this.$store.state.user) {
+            this.error = false;
+            console.log('hello');
+            axios
+            .post(APIConfig.buildUrl("/todos"), {
+                ...this.item
+            })
+            .then((response: AxiosResponse<{item: iItem}>) => {
+            // debugger;
+                this.item.name = "";
+                this.item.date = "";
+            // const { title, date, id, complete, user} = response.data.item;
+            // this.mytodos.push({title, date: new Date (date), id, });
+                this.$emit("success");
+            })
+            .catch((reason: any) => {
+                this.error = reason;
+                this.item.name = "";
+                this.item.date = "";
+            });
+        } else {
+            this.$router.push({ name: "home" });
+        }
     }
 
     mounted() {
-        axios.get(APIConfig.buildUrl("/items"))
+        axios.get(APIConfig.buildUrl("/todos"))
         .then((response: AxiosResponse<any>) => {
             this.$emit("success");
-            this.mytodos = response.data.items.map((item : any) => {
-                return {...item, date: new Date(item.date)};
+            this.mytodos = response.data.items.map((todos : any) => {
+                return {...todos, date: todos.date};
             });
         })
     }
@@ -87,12 +100,16 @@ interface ToDo{
     title: string
     date: Date | undefined;
     id: number | undefined;
+    complete: boolean | undefined;
+    user: iUser;
 }
 
 // pushed to back end
 export interface itemform{
     name: string;
     date: string;
+    complete: boolean;
+
 }
 
 </script>
