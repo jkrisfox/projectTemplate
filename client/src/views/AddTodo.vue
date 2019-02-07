@@ -6,6 +6,9 @@
     </div>
 </template>
 
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "@/utils/api.utils";
+import { iUser } from "@/models/user.interface";
 <script>
 export default{
     name: "AddTodo",
@@ -13,14 +16,19 @@ export default{
         return {
             nameText: '',
             duedateText: '',
+            complete: '',
+            user: '',
         };
     },
     methods: {
         addTodo(){
             if (this.nameText.length > 0 && this.duedateText.length > 0){
-                const name = this.nameText;
-                const duedate = this.duedateText;
-                const newTodo = {name, duedate};
+                const title = this.nameText;
+                const dueDate = this.duedateText;
+                const complete = false;
+                const userId = null;
+
+                const newTodo = {title, complete, dueDate, userId};
                 this.$emit('add-todo', newTodo);
 
                 this.nameText = '';

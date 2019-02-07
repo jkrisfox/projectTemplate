@@ -7,7 +7,7 @@
 			</tr>
             <tr v-for = "(todo, index) in mytodos" v-bind:key="index">
                 
-                <td>{{index + 1}} </td> <td>{{ todo.name }}</td> <td>{{ todo.duedate }}</td> <td><DeleteTodo v-on:delete-todo = "deleteTodo(todo)"/></td>
+                <td>{{index + 1}} </td> <td>{{ todo.title }}</td> <td>{{ todo.dueDate }}</td> <td><CompleteTodo v-on:complete-todo = "completeTodo(todo)"/></td>
                 
             </tr>
             </table>
@@ -19,37 +19,69 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import AddTodo from "./AddTodo.vue"
-import DeleteTodo from "./DeleteTodo.vue"
+import AddTodo from "./AddTodo.vue";
+import CompleteTodo from "./CompleteTodo.vue";
+
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "@/utils/api.utils";
+import { iUser } from "@/models/user.interface";
+
+import Profile from "@/components/Profile.vue";
 
 @Component({
   components: {
     AddTodo,
-    DeleteTodo,
+    CompleteTodo,
   }
 })
 export default class ToDos extends Vue{
-    mytodos: ToDo[] = [
-        { name: "todo one", duedate: undefined },
-        { name: "todo two", duedate: undefined},
-        { name: "todo three", duedate: undefined}
-    ];
+    mytodos: ToDo[] = [];
 
     addTodo(newTodo) {
         this.mytodos.push(newTodo);
+
+        const userID = this.$store.state.userId;
+        if (userID) {
+        axios
+            .get(APIConfig.buildUrl(`/users/${userID}`))
+            .then((res: AxiosResponse<{ user: iUser }>) => {
+                newTodo.user = res.data.user;
+            });
+        }
+
+        console.log('adding');
+        axios
+        .post(APIConfig.buildUrl("/todos"), {
+            ...newTodo
+        })
+        .catch((errorResponse: any) => {
+            debugger;
+        });
     }   
 
-    deleteTodo(todo) {
+    completeTodo(todo) {
         const todoIndex = this.mytodos.indexOf(todo);
+        this.mytodos[todoIndex].complete = true;
+        const cTodo = this.mytodos[todoIndex];
+
+        axios
+        .put(APIConfig.buildUrl("/todos/:id"), {
+            ...cTodo
+        })
+        .catch((errorResponse: any) => {
+            debugger;
+        });
         this.mytodos.splice(todoIndex, 1);
     }   
 }
 
 interface ToDo {
-    name: String;
-    duedate: Date | undefined;
+    title: String;
+    complete: boolean,
+    dueDate: Date | undefined;
+    user: iUser;
 }
 </script>
 
