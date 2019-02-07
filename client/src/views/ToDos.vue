@@ -156,10 +156,11 @@ export default class ToDos extends Vue {
   }
 
   @Watch('token')
-  handleTokenChange(oldToken: string, newToken: string) {
+  handleTokenChange(newToken: string, oldToken: string) {
     if(!newToken){
       this.todos = [];
     } else if (oldToken != newToken){
+      console.log("changing");
       this.fetchList();
     }
   }

@@ -47,7 +47,8 @@ export class ToDoController extends DefaultController {
       });
     }).get((req: Request, res: Response) => {
       const { todoRepo, sessionRepo, foundUser } = res.locals;
-      todoRepo.find({ where: [{ user: foundUser }]}).then((results: ToDo[]) => {
+      console.log(foundUser);
+      todoRepo.find({ where: [{ user: foundUser.id }]}).then((results: ToDo[]) => {
         res.status(200).send(results);
       });
     });
