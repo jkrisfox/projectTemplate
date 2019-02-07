@@ -2,7 +2,6 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import ToDos from "./views/ToDos.vue";
-import newItm from "./components/newitem.vue";
 import MyProfile from "./views/MyProfile.vue";
 
 Vue.use(Router);
@@ -27,13 +26,8 @@ export default new Router({
     },
     {
       path: "/todos",
-      name: "/todos",
+      name: "todos",
       component: ToDos
-    },
-    {
-      path: "/newItm",
-      name: "/newItm",
-      component: newItm
     },
     {
       path: "/my-profile",
