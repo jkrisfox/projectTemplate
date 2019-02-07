@@ -62,10 +62,7 @@ export default class Signup extends Vue {
     console.log("login success");
 
     this.error = false;
-<<<<<<< HEAD
     //debugger;
-=======
->>>>>>> upstream/master
     axios
       .post(APIConfig.buildUrl("/login"), {
         emailAddress: this.signup.emailAddress,
@@ -78,13 +75,8 @@ export default class Signup extends Vue {
         });
         this.$emit("success");
       })
-<<<<<<< HEAD
       .catch((response: AxiosResponse) => {
         //this.error = response.data.error;
-=======
-      .catch((res: AxiosError) => {
-        this.error = res.response && res.response.data.error;
->>>>>>> upstream/master
       });
   }
 

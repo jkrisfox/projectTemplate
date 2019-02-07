@@ -8,7 +8,7 @@
         
         <!--Display To Do Items in table-->
         <div class="element">
-            <table>
+            <table >
                 <tr>
                     <th>NO.</th>
                     <th>ITEM</th>
@@ -17,11 +17,22 @@
                     <th>DELETE</th>
                 </tr>
                 <tr v-for="(todo,index) in mytodos" v-bind:key="index">
-                    <td>{{index+1}}</td>
+                    <!--<td><span>{{todo.id}}</span></td>-->
+                    <td><span>{{index+1}}</span></td>
                     <td><span>{{todo.title}}</span></td>
-                    <td><span>{{todo.duedate}}</span></td>
-                    <td><span>{{todo.complete}}</span></td>
-                    <td><button class="button" v-on:click="deleteItem(index)">x</button></td>
+                    <td><span id="datetime">{{todo.duedate}}</span></td>
+                    <!--<td><span>{{todo.complete}}</span></td>-->
+                    <td v-if=todo.complete><span>&#10004;</span></td>
+                    <td v-else><span>not yet</span></td>
+                    <!--
+                    <td v-else>
+                        <input type="checkbox" v-on:click="checkComplete(todo.id)"/>
+                        <label for="checkbox">{{ checked }}</label>
+                    </td>
+                    -->
+                    <td>
+                        <button class="button" v-on:click="deleteItem(todo.id)"><span>&#10006;</span></button>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -55,21 +66,17 @@ export default class ToDos extends Vue {
     public showAddItem: boolean = false;
     error: string | boolean = false;
 
-    /* 
-    new_item: ToDo = {
-        name: "",
-        duedate: new Date(),
-        complete: false,
+   //fill todolist
+    mytodos: any[] = [];
+    created(){
+        this.getToDoList();
     }
-    */
 
-    todolist = [];
-    mytodos = this.getToDoList();
 
     successAdditem(n:ToDo){
-        //this.mytodos.push({name: n.name, duedate: n.duedate});
         this.addToDoItem(n);    //push to database
         this.showAddItem = false;
+        this.getToDoList();
     }
     cancelAddItem(){
         this.showAddItem = false;
@@ -78,15 +85,8 @@ export default class ToDos extends Vue {
         this.showAddItem = true;
     }
 
-    
-    deleteItem(ind: number){
-        //this.mytodos.splice(ind,1);
-        console.log("delete item");
-    }
-
     addToDoItem(n: ToDo){
         this.error=false;
-        //console.log(n.title);
         //debugger;
         axios
             .post(APIConfig.buildUrl("/todos"), {
@@ -95,7 +95,6 @@ export default class ToDos extends Vue {
                 complete: false,
             })
             .then((response: AxiosResponse<ToDoResponse>)=> {
-                console.log("inside then you should work");
                 this.$store.commit("todo", {
                     token: response.data.token,
                     ToDoId: response.data.ToDoId,
@@ -103,38 +102,60 @@ export default class ToDos extends Vue {
                 //this.$emit("success");
             })
             .catch((response: AxiosResponse) => {
-                //this.error = errorResponse.response.data.reason;
-                console.log("error");
-                //console.log(this.error);
+                this.error = response.data.error;
+                console.log(this.error);
             });
     }   
 
     getToDoList(){ 
-        //this.error = false;
+        this.error = false;
         //debugger;
-        console.log("getting todo items");
         axios
             .get(APIConfig.buildUrl("/todos"))
             .then((response:AxiosResponse) => {
-                console.log(response.data);
-                console.log(JSON.stringify(response.data))
+                //console.log(response.data.todo);
+                this.mytodos = response.data.todo;
                 return response.data;
             })
             .catch((response:AxiosResponse) => {
-                //this.error = response.data.error;
-                console.log("error");
-                //console.log(this.error);
+                this.error = response.data.error;
+                console.log(this.error);
             });
-
-        return [];
-         
-    };
-    
-    /*
-    addToDoItem(){
-        this.mytodos.push({name: `todo${new Date().getTime()}`, duedate: undefined});
     }
-    */
+
+    deleteItem(ind: number){
+        //this.mytodos.splice(ind,1);
+        this.error = false;
+        console.log("delete item", ind);
+        axios
+            .delete(APIConfig.buildUrl("/todos"), {
+                params: {
+                    id : ind
+                }
+            })
+            .catch((response: AxiosResponse) => {
+                console.log("couldn't delete");
+            });
+    }
+
+    checkComplete(ind: number){
+        console.log("clicked");
+        this.error = false;
+        console.log("delete item", ind);
+        axios
+            .put(APIConfig.buildUrl("/todos"), {
+                params: {
+                    id : ind
+                },
+                body : {
+                    complete: true
+                }
+            })
+            .catch((response: AxiosResponse) => {
+                console.log("couldn't delete");
+            });
+    }
+
 }
 
 interface ToDo {
@@ -178,7 +199,7 @@ table {
 }
 
 th {
-    background-color: darkgrey;
+    background-color: #E393CA;
 }
 
 th, td {

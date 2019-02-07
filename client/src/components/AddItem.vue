@@ -7,7 +7,6 @@
         <label class="label">Item</label>
         <div class="control">
           <input class="input" type="text" id="n" placeholder="what do you need to do?" v-model="add_item.title"/>
-          <!--<input class="input" type="text" placeholder="what do you need to do?" v-bind="add_item.new_item"/>-->
         </div>
       </div>
       <div class="field">

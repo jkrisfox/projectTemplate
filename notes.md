@@ -8,6 +8,8 @@
 * **Express.js**is a web application framework for Node.js designed for building web applications and APIs
 * **Axios** is a promise-based HTTP client that works both in the browser and in a node.js environment and provides a single API for dealing with XMLHttpRequests and node's http interface
 * **Postman** is a popular API client that makes it easy for developers to create, share, test and document APIs. 
+* **TypeOrm** is an ORM that can run on many platforms with Typescript and Javascript with features that help you to develop any kind of application that uses databases
+* **(ORM) Object-relational mapping**  is a programming technique for converting data between incompatible type systems using object-oriented programming languages. This creates, in effect, a "virtual object database" that can be used from within the programming language
 
 ### npm guide
 #### api directory

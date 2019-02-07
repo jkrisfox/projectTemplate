@@ -55,10 +55,7 @@ export default class Signup extends Vue {
   error: string | boolean = false;
 
   success() {
-<<<<<<< HEAD
     //debugger;
-=======
->>>>>>> upstream/master
     this.error = false;
     // this.signup.firstName = "done";
     console.log("hello");

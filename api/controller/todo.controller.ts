@@ -34,8 +34,24 @@ export class ToDoController extends DefaultController{
                 todoRepo.find().then((todo: ToDo[]) => {
                     res.status(200).send({ todo });
                 });
-            });
+            })
+            .delete((req:Request, res: Response) =>{
+                const todoRepo = getRepository(ToDo);
+                todoRepo.findOneOrFail(req.params.id).then((foundToDo:ToDo)=>{
+                    todoRepo.remove(foundToDo)
+                });
+            })
+            .put((req:Request, res:Response) => {
+                const todoRepo = getRepository(ToDo);
+                todoRepo.findOneOrFail(req.params.id).then((foundToDo:ToDo)=>{
+                    foundToDo.complete = req.body.complete;
+                    todoRepo.save(foundToDo).then((updatedTodo: ToDo) => {
+                        res.send(200).send({todo: updatedTodo});
+                    });
+                });
+            })
 
+            //for authentication???
             router.route("/todos/:id").put((req: Request, res: Response) => {
                 const todoRepo = getRepository(ToDo);
                 todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {
@@ -45,7 +61,21 @@ export class ToDoController extends DefaultController{
                     res.send(200).send({todo: updatedTodo});
                   });
                 });
-            });
+            })
+            router.route("/todos/:id").get((req: Request, res: Response) => {
+                const todoRepo = getRepository(ToDo);
+                todoRepo.findOne(req.params.id).then((todo: ToDo | undefined) => {
+                    if (todo) {
+                      res.send({ todo });
+                    } else {
+                      res.sendStatus(404);
+                    }
+                  },
+                  () => {
+                    res.sendStatus(404);
+                  }
+                );
+              });
 
          return router;
     }
