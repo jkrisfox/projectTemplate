@@ -36,7 +36,7 @@ const mutations: MutationTree<iRootState> = {
     state.userToken = null;
     state.user = null;
   }
-};
+}
 
 const actions: ActionTree<iRootState, iRootState> = {
   fetchUser({ commit }, payload) {

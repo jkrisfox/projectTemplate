@@ -23,11 +23,10 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/About.vue")
-    },
-    {
+    },{
       path: "/todos",
       name: "todos",
-      component: ToDos
+      component: ToDos,
     },
     {
       path: "/my-profile",
