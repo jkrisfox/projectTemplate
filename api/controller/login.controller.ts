@@ -27,15 +27,32 @@ export class LoginController extends DefaultController {
                   session.user = user;
                 }
                 session.expiresAt = expiry;
-                sessionRepo.save(session).then((updatedSession) => {
-                  res.status(200).send({ token: updatedSession.id });
+                sessionRepo.save(session).then(updatedSession => {
+                  res
+                    .status(200)
+                    .send({ token: updatedSession.id, userId: user.id });
                 });
               });
           } else {
             res
               .status(401)
-              .send({ error: "can't find user with that username or password" });
+              .send({
+                error: "can't find user with that username or password"
+              });
           }
+        });
+    });
+    router.route("/logout").post((req: Request, res: Response) => {
+      const token = req.get("token");
+      const sessionRepo = getRepository(Session);
+      sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
+        if (foundSession) {
+          sessionRepo.remove(foundSession).then(() => {
+            res.status(200).send({ loggedOut: true });
+          });
+        } else {
+          res.status(200).send({ loggedOut: true });
+        }
       });
     });
     return router;

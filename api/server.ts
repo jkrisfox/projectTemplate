@@ -18,6 +18,7 @@ export class Server {
 
       app.use(cors());
       app.use(express.json());
+      app.use(express.static("public"));
 
       app.use("/", new UserController().router);
       app.use("/", new LoginController().router);
