@@ -63,26 +63,8 @@ export default class ToDos extends Vue {
     }
     */
 
-    mytodos: () => any[] =
-         function(){ 
-        //this.error = false;
-        //debugger;
-        console.log("getting todo items");
-        axios
-            .get(APIConfig.buildUrl("/todos"))
-            .then((response:AxiosResponse) => {
-                console.log(response.data);
-                console.log(JSON.stringify(response.data))
-                return response.data;
-            })
-            .catch((response:AxiosResponse) => {
-                //this.error = response.data.error;
-                console.log(this.error);
-            });
-
-        return [];
-         
-    };
+    todolist = [];
+    mytodos = this.getToDoList();
 
     successAdditem(n:ToDo){
         //this.mytodos.push({name: n.name, duedate: n.duedate});
@@ -127,6 +109,26 @@ export default class ToDos extends Vue {
             });
     }   
 
+    getToDoList(){ 
+        //this.error = false;
+        //debugger;
+        console.log("getting todo items");
+        axios
+            .get(APIConfig.buildUrl("/todos"))
+            .then((response:AxiosResponse) => {
+                console.log(response.data);
+                console.log(JSON.stringify(response.data))
+                return response.data;
+            })
+            .catch((response:AxiosResponse) => {
+                //this.error = response.data.error;
+                console.log("error");
+                //console.log(this.error);
+            });
+
+        return [];
+         
+    };
     
     /*
     addToDoItem(){
