@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../entity";
 @Entity()
 export class ToDo {
@@ -14,7 +14,7 @@ export class ToDo {
   @Column()
   public dueDate!: string;
 
-  @OneToOne((type) => User, { cascade: true })
+  @ManyToOne((type) => User, { cascade: true })
   @JoinColumn()
   public user!: User;
 }

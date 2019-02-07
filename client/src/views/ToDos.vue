@@ -5,18 +5,18 @@
       <tr> <th>Task</th><th>Due Date</th><th>Completed</th><th></th></tr>
       </thead>
       <tbody>
-      <tr v-for="(todo, index) in todos" v-bind:key="index" v-if>
+      <tr v-for="(todo, index) in todos" v-bind:key="index">
         <td>{{todo.title}}</td>
         <td>{{todo.dueDate}}</td>
         <td>
           <div class="control">
-            <button v-if="!todo.complete" class="button is-primary is-small" v-on:click="completeItem(todo)">Complete</button>
+            <button v-if="!todo.complete" class="button is-primary is-small" v-on:click="completeItem(todo)">&#10003;</button>
+            <button v-if="todo.complete" class="button is-warning is-small" v-on:click="completeItem(todo)">X</button>
           </div>
         </td>
         <td>
-          <div class="control">
             <button class="button is-danger is-small" v-on:click="deleteItem(todo.id)">-</button>
-          </div>
+
         </td>
       </tr> 
       </tbody>
@@ -27,7 +27,7 @@
             <div class="control">
               <input class="input" type="text" placeholder="New Task" v-model="newToDoTitle"/>
             </div>
-            <!-- <p v-if="nameError" class="help is-danger">Task name required</p> -->
+              <p v-if="nameError" class="help is-danger">Task name required</p>
             </div>
           </td>
           <td>
@@ -35,9 +35,10 @@
             <div class="control">
               <input class="input" type="date" placeholder="Due Date" v-model="newDueDate"/>
             </div>
-            <!-- <p v-if="dateError" class="help is-danger">Date is required</p> -->
+            <p v-if="dateError" class="help is-danger">Date is required</p>
             </div>
           </td>
+          <td></td>
           <td>
             <div class="control">
               <button class="button is-info is-small" v-on:click="addItem">+</button>
@@ -51,37 +52,30 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 import { iToDo } from "../models/todo.interface";
 import { ToDoList } from "../models/todoList";
-import { iUser } from '@/models/user.interface';
+import { iUser } from '../models/user.interface';
 
 @Component
 export default class ToDos extends Vue {
   error: string | boolean = false;
+  nameError: string | boolean = false;
+  dateError: string | boolean = false;
   todos: iToDo[] = [];
   newToDoTitle: string = "";
   newDueDate: string = "";
 
-  created() {
-    this.error = false;
-    axios
-      .get(APIConfig.buildUrl("/todos"), {
-        headers: { token: this.$store.state.userToken }
-      })
-      .then((response: AxiosResponse<{ todos: ToDoList }>) => {
-        this.todos = response.data.todos.list;
-        this.$emit("success");
-      })
-      .catch(response => {
-        this.error = response.message;
-      });
-  }
-
   addItem() {
     this.error = false;
+    this.nameError = this.newToDoTitle === "";
+    this.dateError = this.newDueDate === "";
+    if(this.dateError || this.nameError) {
+      return;
+    }
+
     axios
       .post(
         APIConfig.buildUrl("/todos"),
@@ -109,7 +103,6 @@ export default class ToDos extends Vue {
         headers: { token: this.$store.state.userToken }
       })
       .then((response: AxiosResponse<ToDoResponse>) => {
-        console.log(response.data.id);
         this.todos = this.todos.filter((t:iToDo) => {
           return t.id != response.data.id;
         })
@@ -131,10 +124,9 @@ export default class ToDos extends Vue {
         headers: { token: this.$store.state.userToken }
       })
       .then((response: AxiosResponse<ToDoResponse>) => {
-        console.log(response.data.id);
         this.todos.forEach((item: iToDo) => {
           if(item.id == response.data.id) {
-            item = response.data;
+            item.complete = response.data.complete;
           }
         })
         this.$emit("success");
@@ -142,6 +134,34 @@ export default class ToDos extends Vue {
       .catch(response => {
         this.error = response.message;
       });
+  }
+
+  get token() {
+    return this.$store.state.userToken;
+  }
+
+  fetchList() {
+    this.error = false;
+    axios
+      .get(APIConfig.buildUrl("/todos"), {
+        headers: { token: this.$store.state.userToken }
+      })
+      .then((response: AxiosResponse<{ todos: ToDoList }>) => {
+        this.todos = response.data.todos.list;
+        this.$emit("success");
+      })
+      .catch(response => {
+        this.error = response.message;
+      });
+  }
+
+  @Watch('token')
+  handleTokenChange(oldToken: string, newToken: string) {
+    if(!newToken){
+      this.todos = [];
+    } else if (oldToken != newToken){
+      this.fetchList();
+    }
   }
 }
 
@@ -156,5 +176,16 @@ interface ToDoResponse {
 function reorderDate(date: string) {
   let sDate = date.split("-");
   return sDate[2] + "-" + sDate[1] + "-" + sDate[0];
-}
+}  
 </script>
+
+<style scoped>
+.todo {
+  padding-top: 10% ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+}
+</style>
+
