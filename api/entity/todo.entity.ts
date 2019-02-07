@@ -7,13 +7,13 @@ export class ToDo {
     public id!: number;
 
     @Column()
-    public title!: string;
+    public name!: string;
 
     @Column()
     public complete!: boolean;
 
     @Column()
-    public dueDate!: Date;
+    public duedate!: string;
 
     @OneToOne((type) => User, {cascade: true})
     @JoinColumn()

@@ -27,11 +27,11 @@
       <form v-on:submit.prevent="onSubmit">
         <H1>New Todo Item</H1>Name
         <!--<input class="input" type="text" v-model="item.name">-->
-        <input type="text" v-model="item.name"/>
+        <input type="text" v-model="item.name">
         <br>Due Date
-        <input type="text" v-model="item.duedate"/>
+        <input type="text" v-model="item.duedate">
         <br>
-        <button class="button" v-on:click="addTodoItem">Add</button>      
+        <button class="button" v-on:click="addTodoItem">Add</button>
       </form>
     </body>
   </body>
@@ -41,22 +41,26 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
 @Component
 export default class ToDos extends Vue {
-item: ToDo = {
+  item: ToDo = {
     name: "",
     duedate: ""
   };
 
-  mytodos: ToDo[] = [
-    { name: "Laundry", duedate: "1/31/19" }
-  ];
+  mytodos: ToDo[] = [{ name: "Laundry", duedate: "1/31/19" }];
   addTodoItem() {
     this.mytodos.push({
       name: this.item.name,
       duedate: this.item.duedate
     });
 
+    axios
+    .post(APIConfig.buildUrl("/todos"), {
+      ...this.item
+    })
   }
 }
 
