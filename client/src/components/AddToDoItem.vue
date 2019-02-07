@@ -33,16 +33,17 @@ export default class AddToDoItem extends Vue {
   @Prop(Boolean) isShowing: boolean = false;
   item: ToDoItem = {
     data: "",
-    date: undefined,
-    complete: false
+    date: undefined
   };
   error: string | boolean = false;
   success() {
     this.item.date = new Date(this.item.date);
     this.error = false;
     axios
-      .post(APIConfig.buildUrl("/todos"), {
-        ...this.item
+      .post(APIConfig.buildUrl("/todos"), this.item, {
+        headers: {
+          token: this.$store.state.userToken
+        }
       })
       .then((response: AxiosResponse<iToDoItem>) => {
         this.$emit("success");
@@ -58,6 +59,5 @@ export default class AddToDoItem extends Vue {
 export interface ToDoItem {
   data: string;
   date: Date;
-  complete: boolean;
 }
 </script>

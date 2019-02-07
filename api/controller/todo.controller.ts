@@ -23,25 +23,49 @@ export class ToDoController extends DefaultController {
       const sessionRepo = getRepository(Session);
       const todoRepo = getRepository(ToDo);
       const todo = new ToDo();
-      sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
+      sessionRepo.findOne(token, {relations: ["user"]}).then((foundSession: Session | undefined) => {
         const user = foundSession!.user;
         todo.date = req.body.date;
         todo.data = req.body.data;
-        todo.complete = req.body.complete;
+        todo.complete = false;
         todo.user = user;
         todoRepo.save(todo).then((savedTodo: ToDo) => {
           res.status(200).send({ todo });
         });
       });
     });
-    router.route("/todos/:id").put((req: Request, res: Response) => {
+
+    router.route("/todos/:id")
+    .delete((req: Request, res: Response) => {
+      const token = req.get("token");
+      const sessionRepo = getRepository(Session);
+      const todoRepo = getRepository(ToDo);
+      sessionRepo.findOne(token, {relations: ["user"]}).then((foundSession: Session | undefined) => {
+        const user = foundSession!.user;
+        todoRepo.delete({id: req.params.id, user: user}).then(deleteResult => {
+          res.sendStatus(200);
+        });
+      });
+    })
+    .put((req: Request, res: Response) => {
       const todoRepo = getRepository(ToDo);
       todoRepo.findOneOrFail(req.params.id).then((foundToDo: ToDo) => {
-        // save updates here
         foundToDo.complete = req.body.complete;
         todoRepo.save(foundToDo).then((updatedTodo: ToDo) => {
           res.send(200).send({todo: updatedTodo});
         });
+      });
+    });
+
+    router.route("/todos/load").get((req: Request, res: Response) => {
+      const token = req.get("token");
+      const sessionRepo = getRepository(Session);
+      const todoRepo = getRepository(ToDo);
+      sessionRepo.findOne(token, {relations: ["user", "user.todos"]}).then((foundSession: Session | undefined) => {
+        if (foundSession) {
+          const user = foundSession!.user;
+          res.status(200).send(user.todos);
+        }
       });
     });
     return router;

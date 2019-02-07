@@ -1,4 +1,5 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ToDo } from "./todo.entity";
 
 @Entity()
 export class User {
@@ -20,4 +21,7 @@ export class User {
   @Column()
   @Index({ unique: true })
   public emailAddress!: string;
+
+  @OneToMany((type) => ToDo, (todo) => todo.user)
+  public todos!: ToDo[];
 }

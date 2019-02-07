@@ -1,7 +1,6 @@
 <template>
     <div id="todolist" class="table">
         <h1>My Todo List</h1>
-        
         <table>
           <tr>
             <th class="column-0"> </th>
@@ -10,15 +9,13 @@
             <th class="column-3"> </th>       
           </tr>
           <tr v-for="(item, index) in items" v-bind:key="index">
-            <td><input type="checkbox"></td>
+            <td><input type="checkbox" v-on:change="completeToDoItem(item.id)" v-bind:checked="item.complete"></td>
             <td>{{item.data}}</td>
             <td>{{ new Date(item.date).toLocaleString()}}</td>
             <td><button v-on:click="deleteToDoItem(item.id)">Delete</button></td>
           </tr>
         </table>
-
         {{getItems()}}
-
         <br>
         <a class="button is-primary" v-on:click="showAddToDoItemModal()">
                 <strong>Add Item</strong>
@@ -40,16 +37,19 @@ import { ToDo } from "../../../api/entity";
   }
 })
 export default class ToDos extends Vue {
-  private msg!: string;
   public showAddToDoItem: boolean = false;
   public items: ToDo[] = [];
   getItems() {
-    axios.get(APIConfig.buildUrl('/todos'), {
-    }).then((response: AxiosResponse<ToDo[]>) => {
-      this.items = response.data.items;
-    }).catch((reason: any) => {
-      console.log(reason);
-    })
+    if (this.$store.state.userToken) {
+      axios.get(APIConfig.buildUrl("/todos/load"), {
+        headers: {
+          token: this.$store.state.userToken
+        }
+      })
+      .then((response) => {
+          this.items = response.data;
+      });
+    }
   }
   showAddToDoItemModal() {
       this.showAddToDoItem = true;
@@ -60,18 +60,31 @@ export default class ToDos extends Vue {
   }
   cancelAddToDoItem() {
       this.showAddToDoItem = false;
+      this.getItems();
+  }
+  completeToDoItem(id: number) {
+    axios.put(APIConfig.buildUrl("/todos/" + id), { complete: true }, {
+      headers: {
+        token: this.$store.state.userToken
+      }
+    })
   }
   deleteToDoItem(id: number) {
-    axios.delete(APIConfig.buildUrl('/todos'), {
-      data : {
-        id: id
+    axios.delete(APIConfig.buildUrl("/todos/" + id), {
+      headers: {
+        token: this.$store.state.userToken
       }
-    }).then((response: AxiosResponse<[iToDoItem]>) => {
-      debugger;
-      this.items = response.data.items;
-    }).catch((reason: any) => {
-      console.log(reason);
-    })
+      }).then(() => {
+        this.getItems();
+    });
+  }
+  created() {
+    this.getItems();
+  }
+  beforeRouteUpdate(to: string, from: string, next: string) {
+    if (to == "todos") {
+      this.getItems();
+    }
   }
 }
 </script>
