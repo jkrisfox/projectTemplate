@@ -3,7 +3,7 @@ import DefaultController from "./default.controller";
 import express, { Request, Response } from "express";
 import { getRepository } from "typeorm";
 
-import { Session, User } from "../entity";
+import { Session, User, ToDo } from "../entity";
 
 export class LoginController extends DefaultController {
   protected initializeRoutes(): express.Router {
