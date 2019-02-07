@@ -2,12 +2,17 @@
   <div class="todo">
     <table class="table is-bordered is-striped">
       <thead class="is-primary">
-      <tr> <th>Task</th><th>Due Date</th><th></th></tr>
+      <tr> <th>Task</th><th>Due Date</th><th>Completed</th><th></th></tr>
       </thead>
       <tbody>
-      <tr v-for="(todo, index) in todos" v-bind:key="index">
+      <tr v-for="(todo, index) in todos" v-bind:key="index" v-if>
         <td>{{todo.title}}</td>
         <td>{{todo.dueDate}}</td>
+        <td>
+          <div class="control">
+            <button v-if="!todo.complete" class="button is-primary is-small" v-on:click="completeItem(todo)">Complete</button>
+          </div>
+        </td>
         <td>
           <div class="control">
             <button class="button is-danger is-small" v-on:click="deleteItem(todo.id)">-</button>
@@ -107,6 +112,30 @@ export default class ToDos extends Vue {
         console.log(response.data.id);
         this.todos = this.todos.filter((t:iToDo) => {
           return t.id != response.data.id;
+        })
+        this.$emit("success");
+      })
+      .catch(response => {
+        this.error = response.message;
+      });
+  }
+
+  completeItem(item: iToDo) {
+    this.error = false;
+    axios
+      .put(APIConfig.buildUrl(`/todos/${item.id}`), {
+          title: item.title,
+          dueDate: item.dueDate,
+          completed: !item.complete
+      }, {
+        headers: { token: this.$store.state.userToken }
+      })
+      .then((response: AxiosResponse<ToDoResponse>) => {
+        console.log(response.data.id);
+        this.todos.forEach((item: iToDo) => {
+          if(item.id == response.data.id) {
+            item = response.data;
+          }
         })
         this.$emit("success");
       })
