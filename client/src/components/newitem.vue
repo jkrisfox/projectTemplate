@@ -7,15 +7,15 @@
       <div class="field">
         <label class="label">Title</label>
         <div class="control">
-          <input class="input" type="text" placeholder="Title" v-model="signup.title"/>
+          <input class="input" type="text" placeholder="Title" v-model="newItm.title"/>
         </div>
       </div>
       <div class="field">
         <label class="label">Due Date</label>
         <div class="control">
-          <input class="input" type="text" placeholder="Due Date" v-model="signup.ddate"/>
+          <input class="input" type="text" placeholder="Due Date" v-model="newItm.ddate"/>
         </div>
-      </div>
+      </div>    
     </form>
   </modal>
 </template>
@@ -32,9 +32,10 @@ import { itodo } from "../models/todo.interface";
 })
 export default class newItem extends Vue {
   @Prop(Boolean) isShowing: boolean = false;
-  signup: newItemForm = {
+  newItm: newItemForm = {
     title: "",
-    ddate: ""
+    ddate: "",
+    user: 0
   };
   error: string | boolean = false;
 
@@ -42,15 +43,16 @@ export default class newItem extends Vue {
     debugger;
     this.error = false;
     console.log('hello');
+    this.newItm.user = this.$store.state.user;
     axios
       .post(APIConfig.buildUrl("/todos"), {
-        ...this.signup
+        ...this.newItm
       }, {headers: {token: this.$store.state.userToken}})
-      .then((response: AxiosResponse<itodo>) => {
+      .then((response: AxiosResponse<{todo: itodo}>) => {
+        debugger;
         this.$emit("success");
       })
       .catch((errorResponse: any) => {
-        debugger;
         this.error = errorResponse.response.data.reason;
       });
   }
@@ -63,5 +65,6 @@ export default class newItem extends Vue {
 export interface newItemForm {
   title: string;
   ddate: string;
+  user: number | null;
 }
 </script>

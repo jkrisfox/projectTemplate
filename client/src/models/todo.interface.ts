@@ -1,4 +1,7 @@
 export interface itodo {
     title: string,
-    ddate: string
+    complete: boolean,
+    duedate: string,
+    user: string,
+    id: number
 }

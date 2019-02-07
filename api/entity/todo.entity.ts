@@ -1,20 +1,20 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../entity";
 @Entity()
 export class ToDo {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @Column()
+  @Column({default:null})
   public title!: string;
 
-  @Column()
+  @Column({default:null})
   public complete!: boolean;
 
-  @Column()
-  public dueDate!: Date;
+  @Column({default:null})
+  public ddate!: Date;
 
-  @OneToOne((type) => User, { cascade: true })
+  @ManyToOne((type) => User, { cascade: true })
   @JoinColumn()
   public user!: User;
 }

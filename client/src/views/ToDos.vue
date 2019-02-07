@@ -30,7 +30,7 @@
     <!-- <button class="button button2" v-on:click="addtoItem">Add</button> -->
     <a class="button is-primary" v-on:click="showSignupModal()"><strong>Add</strong></a>
 
-    <Signup
+    <newItm
       v-bind:is-showing="showSignup"
       v-on:success="successSignup()"
       v-on:cancel="cancelSignup()"
@@ -44,11 +44,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import Signup from "@/components/newitem.vue";
+import newItm from "@/components/newitem.vue";
 
 @Component({
   components: {
-    Signup
+    newItm
   }
 })
 export default class ToDos extends Vue {
@@ -67,15 +67,12 @@ export default class ToDos extends Vue {
   deleteItem(index : number) {
     this.mytodos.splice(index,1);
   }
-
   showSignupModal() {
     this.showSignup = true;
   }
-
   successSignup() {
     this.showSignup = false;
   }
-
   cancelSignup() {
     this.showSignup = false;
   }
