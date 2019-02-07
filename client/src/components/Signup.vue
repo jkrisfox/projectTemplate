@@ -56,6 +56,11 @@ export default class Signup extends Vue {
 
   success() {
     this.error = false;
+<<<<<<< HEAD
+=======
+    // this.signup.firstName = "done";
+    console.log("hello");
+>>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7
     axios
       .post(APIConfig.buildUrl("/users"), {
         ...this.signup

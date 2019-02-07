@@ -1,9 +1,11 @@
 <template>
   <div class="profile columns">
     <div class="profilePhoto column">
-      <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-        <h1>Upload images</h1>
-        <div class="file has-name">
+      <form enctype="multipart/form-data" novalidate>
+        <div class="profilePhoto">
+          <img :src="profileUrl"/>
+        </div>
+        <div class="file">
           <label class="file-label">
             <input
               type="file"
@@ -14,16 +16,15 @@
               class="input-file file-input"
             >
             <span class="file-cta">
-              <span class="file-icon icon">
-                <font-awesome-icon icon="upload" />
+              <span class="file-icon">
+                <font-awesome-icon icon="upload"/>
               </span>
-              <span class="file-label">Choose a profile image...</span>
-            </span>
-            <span class="file-name">
-              {{uploadedFile}}
+              <span class="file-label">
+                Choose a profile image…
+              </span>
             </span>
           </label>
-          <p v-if="isSaving">Uploading {{ fileCount }} files...</p>
+          <p v-if="isSaving">Uploading file...</p>
         </div>
       </form>
     </div>
@@ -51,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { APIConfig } from "@/utils/api.utils";
@@ -72,29 +73,25 @@ export default class Profile extends Vue {
   @Prop({ default: null })
   user!: iUser | null;
 
-  upload(formData: any) {
-    const url = `${APIConfig.url}/photos/upload`;
-    return (
-      axios
-        .post(url, formData)
-        // get data
-        .then(x => x.data)
-        // add url field
-        .then(x =>
-          x.map((img: any) =>
-            Object.assign({}, img, { url: `${APIConfig.url}/images/${img.id}` })
-          )
-        )
-    );
+  upload(formData: FormData) {
+    if (this.user) {
+      const url = `${APIConfig.url}/users/${this.user.id}`;
+      return axios
+        .post(url, formData, {
+          headers: { token: this.$store.state.userToken }
+        })
+        .then((res: AxiosResponse<{ user: iUser }>) => {
+          this.$store.dispatch("fetchUser", { userid: res.data.user.id });
+        });
+    }
+    return Promise.reject({ response: "no user logged in" });
   }
 
   save(formData: FormData) {
     // upload data to the server
     this.currentStatus = STATUS_SAVING;
-
     this.upload(formData)
-      .then(x => {
-        this.uploadedFile = x;
+      .then(() => {
         this.currentStatus = STATUS_SUCCESS;
       })
       .catch(err => {
@@ -146,6 +143,13 @@ export default class Profile extends Vue {
 
   get isFailed() {
     return this.currentStatus === STATUS_FAILED;
+  }
+
+  get profileUrl(): string {
+    if (this.user) {
+      return APIConfig.buildUrl(`/${this.user.profileUrl}`);
+    }
+    return "";
   }
 }
 </script>

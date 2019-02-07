@@ -61,6 +61,7 @@ import { iUser } from '../models/user.interface';
 
 @Component
 export default class ToDos extends Vue {
+<<<<<<< HEAD
   error: string | boolean = false;
   nameError: string | boolean = false;
   dateError: string | boolean = false;
@@ -163,6 +164,18 @@ export default class ToDos extends Vue {
       console.log("changing");
       this.fetchList();
     }
+=======
+  mytodos: ToDo[] = [
+    { name: "Tod one", duedate: undefined },
+    { name: "todo two", duedate: undefined },
+    { name: "todo three", duedate: undefined }
+  ];
+  addTodoItem() {
+    this.mytodos.push({
+      name: `todo${new Date().getTime()}`,
+      duedate: undefined
+    });
+>>>>>>> fe6ff8704fe8063819991c5327fb3c018aa6ffa7
   }
 }
 
@@ -189,4 +202,3 @@ function reorderDate(date: string) {
   font-size: 150%;
 }
 </style>
-
