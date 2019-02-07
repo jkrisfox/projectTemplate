@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="navbar">
+    <div class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-menu">
         <div class="navbar-start">
           <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link>
@@ -79,17 +79,17 @@ export default class App extends Vue {
   }
 
   get isLoggedIn(): boolean {
-    return !!this.$store.state.userId;
+    return !!this.$store.state.user;
   }
 
   logout() {
-    debugger;
     axios
       .post(APIConfig.buildUrl("/logout"), null, {
         headers: { token: this.$store.state.userToken }
       })
       .then(() => {
         this.$store.commit("logout");
+        this.$router.push({ name: "home" });
       });
   }
 }
