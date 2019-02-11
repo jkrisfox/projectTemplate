@@ -2,14 +2,14 @@
   <div class="profile columns">
     <div class="profilePhoto column">
       <form enctype="multipart/form-data" novalidate>
-        <div class="profilePhoto">
-          <img :src="profileUrl"/>
+        <div class="itemPhoto">
+          <img :src="imageUrl"/>
         </div>
         <div class="file">
           <label class="file-label">
             <input
               type="file"
-              name="profilePhoto"
+              name="itemPhoto"
               :disabled="isSaving"
               v-on:change="filesChanged"
               accept="image/*"
@@ -28,7 +28,7 @@
         </div>
       </form>
     </div>
-    <div class="profileInfo column">
+    <div class="itemInfo column">
       <div class="field">
         <label class="label">Product Name:</label>
         <div class="control">
@@ -64,6 +64,12 @@
             In Store Only
         </label>
     </div>
+    <div class="buttons">
+              <a class="button is-primary"  v-on:click="addNewItem()">
+                <strong>Add New Item</strong>
+              </a>
+              <a class="button is-light" v-if="!isLoggedIn" v-on:click="cancel()">Cancel</a>
+            </div>
   </div>
 </template>
 
@@ -93,27 +99,32 @@ export default class AddNewProduct extends Vue {
     imageUrls: "",
     stockCount: 0,
     tags: "",
-    inStoreOnly: undefined
+    inStoreOnly: false
   };
 
-  upload(formData: FormData) {
+  addNewItem() {
+    // save it
+    this.save(this.item);
+  }
+
+  upload(item: iItem) {
     if (this.item) {
-      const url = `${APIConfig.url}/users/${this.item.id}`;
+      const url = `${APIConfig.url}/items/`;
       return axios
-        .post(url, formData, {
+        .post(url, item, {
           headers: { token: this.$store.state.userToken }
         })
-        .then((res: AxiosResponse<{ user: iItem }>) => {
-          this.$store.dispatch("fetchUser", { userid: res.data.user.id });
+        .then((res: AxiosResponse<{ item: iItem }>) => {
+          alert("New Item added, yay!");
         });
     }
     return Promise.reject({ response: "no user logged in" });
   }
 
-  save(formData: FormData) {
+  save(item: iItem) {
     // upload data to the server
     this.currentStatus = STATUS_SAVING;
-    this.upload(formData)
+    this.upload(item)
       .then(() => {
         this.currentStatus = STATUS_SUCCESS;
       })
@@ -121,24 +132,6 @@ export default class AddNewProduct extends Vue {
         this.uploadError = err.response;
         this.currentStatus = STATUS_FAILED;
       });
-  }
-
-  filesChanged(event: any) {
-    const name = event.target.name;
-    const files = event.target.files;
-    this.fileCount = event.target.files.length;
-    // handle file changes
-    const formData = new FormData();
-
-    if (!files.length) return;
-
-    // append the files to FormData
-    Array.from(Array(files.length).keys()).map(x => {
-      formData.append(name, files[x], files[x].name);
-    });
-
-    // save it
-    this.save(formData);
   }
 
   reset() {
@@ -168,7 +161,7 @@ export default class AddNewProduct extends Vue {
     return this.currentStatus === STATUS_FAILED;
   }
 
-  get profileUrl(): string {
+  get imageUrl(): string {
     if (this.item) {
       return APIConfig.buildUrl(`/${this.item.imageUrls}`);
     }
