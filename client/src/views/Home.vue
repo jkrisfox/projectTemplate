@@ -62,6 +62,8 @@ export default class Home extends Vue {}
 
 <style scoped lang="scss">
   .home {
+    max-width: unset;
+    width: unset;
     margin: 2%;
   }
 </style>
