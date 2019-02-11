@@ -3,12 +3,12 @@
     <div>Hi from todos</div>
     <table>
       <tr v-for="(todo, index) in mytodos" v-bind:key="index">
-        <th>{{todo.name}}</th>
-        <th>{{todo.duedate.toLocaleString().split(',')[0]}}</th>
+        <th>{{todo.title}}</th>
+        <th>{{todo.dueDate.toLocaleString().split(',')[0]}}</th>
       </tr>
     </table>
-    <input class="input" type="text" placeholder="new item" v-model="todo.name"/>
-    <input class="input" type="date" v-model="todo.duedate"/>
+    <input class="input" type="text" placeholder="new item" v-model="todo.title"/>
+    <input class="input" type="date" v-model="todo.dueDate"/>
     <button class="button" v-on:click="addTodoItem">Add</button>
     <button class="button" v-on:click="deleteTodoItem">Delete</button>
   </div>
@@ -16,33 +16,65 @@
 
 <script lang="ts">
 import Vue from "vue";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
 import { Component } from "vue-property-decorator";
 @Component
 export default class ToDos extends Vue {
   todo: ToDo = {
-    name: "",
-    duedate: undefined
+    title: "",
+    dueDate: undefined
   };
-  mytodos: ToDo[] = [
-    { name: "todo one", duedate: new Date("2011-04-11") },
-    { name: "todo two", duedate: new Date("2011-04-11") },
-    { name: "todo three", duedate: new Date("2011-04-11") }
-  ];
+  mytodos: ToDo[] = [];
+  error: string | boolean = false;
+
+  mounted() {
+    console.log("component has mounted");
+    axios.get(APIConfig.buildUrl("/todos")).then((response: AxiosResponse) => {
+      const todos = response.data.todos;
+      todos.forEach((todo: any) => {
+        todo.dueDate = new Date(todo.dueDate);
+      });
+      this.mytodos = todos;
+    }).catch((errorResponse: any) => {
+      console.log("error");
+      this.error = errorResponse.response.data.reason;
+    });
+  }
+
   addTodoItem() {
-    if (!this.todo.duedate) {
+    if (!this.todo.dueDate || !this.todo.title) {
       return;
     }
-    const duedate = new Date(this.todo.duedate);
-    this.mytodos.push({ name: this.todo.name, duedate: duedate });
+    const newTodo = {
+      title: this.todo.title,
+      dueDate: new Date(this.todo.dueDate)
+    };
+    axios.post(APIConfig.buildUrl("/todos"), {
+      ...newTodo,
+      complete: false,
+    }).then((response: AxiosResponse) => {
+      this.mytodos.push(newTodo);
+      this.$emit("success");
+    }).catch((errorResponse: any) => {
+      console.log("error");
+      this.error = errorResponse.response.data.reason;
+    });
   }
   deleteTodoItem() {
-    this.mytodos.pop();
+    axios.delete(APIConfig.buildUrl("/todos")).then((response: AxiosResponse) => {
+      this.mytodos.pop();
+      this.$emit("success");
+    }).catch((errorResponse: any) => {
+      console.log("error");
+      this.error = errorResponse.response.data.reason;
+    });
   }
 }
 
 interface ToDo {
-  name: string;
-  duedate: Date | undefined;
+  title: string;
+  dueDate: Date | undefined;
 }
 </script>
 

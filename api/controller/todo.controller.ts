@@ -11,20 +11,37 @@ export class ToDoController extends DefaultController {
   protected initializeRoutes(): express.Router {
     const router = express.Router();
 
-    router.route("/todos").post((req: Request, res: Response) => {
-      const token = req.get("token");
-      const sessionRepo = getRepository(Session);
-      const todoRepo = getRepository(ToDo);
-      const todo = new ToDo();
-      sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
-        const user = foundSession!.user;
-        todo.dueDate = req.body.dueDate;
-        todo.title = req.body.title;
-        todo.user = user;
-        todoRepo.save(todo).then((savedTodo: ToDo) => {
-          res.status(200).send({ todo });
+    router
+      .route("/todos")
+      .get((req: Request, res: Response) => {
+        const todoRepo = getRepository(ToDo);
+        todoRepo.find().then((todos: ToDo[]) => {
+          res.status(200).send({ todos });
         });
-      });
+      })
+      .post((req: Request, res: Response) => {
+        const token = req.get("token");
+        const sessionRepo = getRepository(Session);
+        const todoRepo = getRepository(ToDo);
+        const todo = new ToDo();
+        sessionRepo.findOne(token).then((foundSession: Session | undefined) => {
+          const user = foundSession!.user;
+          todo.dueDate = req.body.dueDate;
+          todo.title = req.body.title;
+          todo.complete = req.body.complete;
+          todo.user = user;
+          todoRepo.save(todo).then((savedTodo: ToDo) => {
+            res.status(200).send({ todo });
+          });
+        });
+      })
+      .delete(async (req: Request, res: Response) => {
+        const todoRepo = getRepository(ToDo);
+        const todos = await todoRepo.find();
+        if (todos.length > 0) {
+          await todoRepo.remove(todos[todos.length - 1]);
+        }
+        res.status(200).send("Success");
     });
     router.route("/todos/:id").put((req: Request, res: Response) => {
       const todoRepo = getRepository(ToDo);

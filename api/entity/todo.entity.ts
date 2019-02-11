@@ -8,7 +8,7 @@ export class ToDo {
   @Column()
   public title!: string;
 
-  @Column()
+  @Column({default: false})
   public complete!: boolean;
 
   @Column()
