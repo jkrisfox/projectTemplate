@@ -22,7 +22,7 @@ export class Server {
 
       app.use("/", new UserController().router);
       app.use("/", new LoginController().router);
-      app.use("/", new ItemController().router);
+      // app.use("/", new ItemController().router);
       app.use("/", new ToDoController().router);
       return app;
     });
