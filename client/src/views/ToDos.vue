@@ -22,6 +22,7 @@ import { Component } from "vue-property-decorator";
 @Component
 export default class ToDos extends Vue {
   todo: ToDo = {
+    id: undefined,
     title: "",
     dueDate: undefined
   };
@@ -46,14 +47,15 @@ export default class ToDos extends Vue {
     if (!this.todo.dueDate || !this.todo.title) {
       return;
     }
-    const newTodo = {
-      title: this.todo.title,
-      dueDate: new Date(this.todo.dueDate)
-    };
     axios.post(APIConfig.buildUrl("/todos"), {
-      ...newTodo,
-      complete: false,
+      title: this.todo.title,
+      dueDate: new Date(this.todo.dueDate + 'T00:00:00'),
+      complete: false
+    }, {
+      headers: { token: this.$store.state.userToken }
     }).then((response: AxiosResponse) => {
+      const newTodo = response.data.todo;
+      newTodo.dueDate = new Date(newTodo.dueDate);
       this.mytodos.push(newTodo);
       this.$emit("success");
     }).catch((errorResponse: any) => {
@@ -62,7 +64,9 @@ export default class ToDos extends Vue {
     });
   }
   deleteTodoItem() {
-    axios.delete(APIConfig.buildUrl("/todos")).then((response: AxiosResponse) => {
+    const id = this.mytodos[this.mytodos.length - 1].id;
+    axios.delete(APIConfig.buildUrl("/todos"))
+    .then((response: AxiosResponse) => {
       this.mytodos.pop();
       this.$emit("success");
     }).catch((errorResponse: any) => {
@@ -73,6 +77,7 @@ export default class ToDos extends Vue {
 }
 
 interface ToDo {
+  id: number | undefined;
   title: string;
   dueDate: Date | undefined;
 }
