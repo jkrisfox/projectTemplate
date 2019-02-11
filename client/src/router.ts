@@ -26,11 +26,6 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-      path: "/todos",
-      name: "todos",
-      component: ToDos
-    },
-    {
       path: "/my-profile",
       name: "myProfile",
       component: MyProfile
