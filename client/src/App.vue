@@ -139,4 +139,12 @@ export default class App extends Vue {
   color: black;
 }
 
+.navbar-start {
+  padding-top: 50px;
+}
+
+.navbar-end {
+  padding-top: 50px;
+}
+
 </style>
