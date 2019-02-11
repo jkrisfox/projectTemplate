@@ -1,57 +1,59 @@
-<template>
-    <div class="todos">
-        <div>Hi from todos</div>
 
-        <div v-for="(todo, index) in mytodos" v-bind:key="index">
-            <span>{{ todo.name }}</span>
-            <span>{{ todo.duedate }}</span>
-        </div>
-        <div class="buttons">
-            <a class="button is-primary" v-if="!isLoggedIn" v-on:click="showTodosModal()">
-                <strong>Add</strong>
-            </a>
-        </div>
-        <Todos v-bind:is-showing="showTodos"
-               v-on:success="successTodos()"
-               v-on:cancel="cancelTodos()" />
-    </div>
+<template>
+  <div class='todos'>
+    <div>Hi from Todos</div>
+      <div v-for="(todo, index) in mytodos" v-bind:key="index">
+          <span>{{todo.name}}</span>
+          <span>{{todo.duedate}}</span>
+      </div>
+      <div class="buttons">
+        <a class="button is-primary" v-on:click="showNewToDoModal()">
+          <strong>Add</strong>
+         </a>
+      </div>
+      <router-view/>
+      <NewToDo v-bind:is-showing="showNewToDo" v-on:success="addNewToDo()" v-on:cancel="cancelNewToDo()"/>
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
+import Vue from 'vue';
 import { Component } from "vue-property-decorator";
-import Todos from "../components/Todo.vue";
+import Modal from "../components/Modal.vue";
+import NewToDo from "../components/NewToDo.vue";
 
-@Component({ components: { Todos } })
+@Component({
+  components: { NewToDo }
+})
+
 export default class ToDos extends Vue {
-  mytodos: ToDo[] = [
-    { name: "Tod one", duedate: undefined },
-    { name: "todo two", duedate: undefined },
-    { name: "todo three", duedate: undefined }
-  ];
-
-    public showTodos: boolean = false;
-
-    showTodosModal() {
-        this.showTodos = true;
+    public showNewToDo: boolean = false;
+    mytodos: any[] = [];
+    addNewToDo(){
+      /*this.mytodos.push({
+        name: `todo${new Date().getTime()}`,
+        duedate: undefined
+        });*/
+      this.showNewToDo = false;
     }
-    successTodos() {
-        this.mytodos.push({
-            name: `todo${new Date().getTime()}`,
-            duedate: undefined
-        });
-        this.showTodos = false;
+    showNewToDoModal(){
+      this.showNewToDo = true;
     }
-    cancelTodos() {
-        this.showTodos = false;
+    cancelNewToDo(){
+      this.showNewToDo = false;
+    }
+    mounted(){
+      axios.get(APIConfig.buildUrl("/todos"), {headers: {token: this.$store.state.userToken}})
+      .then((res: AxiosResponse<{todos: any[]}>) => {
+        this.mytodos = res.data.todos;
+      })
     }
 }
 
-interface ToDo {
-  name: string;
-  duedate: Date | undefined;
+export interface Todo {
+    name: string;
+    duedate: string | undefined;
 }
 </script>
-
-<style scoped>
-</style>
