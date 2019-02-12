@@ -4,10 +4,10 @@
     <div class="navbar">
       <div class="navbar-menu">
         <div class="navbar-logo">
-          <a href="/">
+          <router-link to="/" exact-active-class="is-active">
             <img class="foxcycle-logo-img" src="./assets/foxcyclelogo.png">
             <p class="foxcycle-logo-text">FoxCycle</p>
-          </a>
+          </router-link>
             <p class="foxcycle-logo-city">San Luis Obispo, CA</p>
         </div>
         <div class="navbar-start">
