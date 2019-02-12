@@ -3,16 +3,16 @@
   <div class='todos'>
     <div>Hi from Todos</div>
       <div v-for="(todo, index) in mytodos" v-bind:key="index">
-          <span>{{todo.name}}</span>
-          <span>{{todo.duedate}}</span>
+          <span>{{todo.title}}</span>
+          <span>{{todo.dueDate}}</span>
       </div>
       <div class="buttons">
-        <a class="button is-primary" v-on:click="showNewToDoModal()">
+        <a class="button is-primary" v-on:click="showTodoModal()">
           <strong>Add</strong>
          </a>
       </div>
       <router-view/>
-      <NewToDo v-bind:is-showing="showNewToDo" v-on:success="addNewToDo()" v-on:cancel="cancelNewToDo()"/>
+      <Todo v-bind:is-showing="showTodo" v-on:success="addTodo()" v-on:cancel="cancelTodo()"/>
   </div>
 </template>
 
@@ -21,39 +21,40 @@ import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "../utils/api.utils";
 import Vue from 'vue';
 import { Component } from "vue-property-decorator";
-import Modal from "../components/Modal.vue";
-import NewToDo from "../components/NewToDo.vue";
+import Todo from "../components/Todo.vue";
 
 @Component({
-  components: { NewToDo }
+  components: { Todo }
 })
 
 export default class ToDos extends Vue {
-    public showNewToDo: boolean = false;
+    public showTodo: boolean = false;
     mytodos: any[] = [];
-    addNewToDo(){
-      /*this.mytodos.push({
-        name: `todo${new Date().getTime()}`,
-        duedate: undefined
-        });*/
-      this.showNewToDo = false;
+    addTodo() {
+        this.refresh();
+      this.showTodo = false;
     }
-    showNewToDoModal(){
-      this.showNewToDo = true;
+    showTodoModal(){
+      this.showTodo = true;
     }
-    cancelNewToDo(){
-      this.showNewToDo = false;
+    cancelTodo(){
+      this.showTodo = false;
     }
     mounted(){
-      axios.get(APIConfig.buildUrl("/todos"), {headers: {token: this.$store.state.userToken}})
-      .then((res: AxiosResponse<{todos: any[]}>) => {
-        this.mytodos = res.data.todos;
+        this.refresh();
+    }
+    refresh() {
+      axios.get(APIConfig.buildUrl("/todos"), { headers: { token: this.$store.state.userToken } })
+          .then((res: AxiosResponse<{ todos: any[] }>) => {
+              debugger;
+              this.mytodos = res.data.todos;
+              console.log("mytodos", this);
       })
     }
 }
 
-export interface Todo {
-    name: string;
+export interface Todos {
+    item: string;
     duedate: string | undefined;
 }
 </script>

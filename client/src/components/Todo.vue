@@ -32,7 +32,7 @@ import { iUser } from "../models/user.interface";
 @Component({
   components: { Modal }
 })
-export default class Todos extends Vue {
+export default class Todo extends Vue {
   @Prop(Boolean) isShowing: boolean = false;
   todos: TodosForm = {
       item: "",
@@ -40,14 +40,16 @@ export default class Todos extends Vue {
   };
   error: string | boolean = false;
 
+
+
   success() {
     this.error = false;
     // this.signup.firstName = "done";
     console.log("hello");
     axios
-      .post(APIConfig.buildUrl("/users"), {
-        ...this.todos
-      })
+      .post(APIConfig.buildUrl("/todos"), {
+            ...this.todos
+        }, { headers: { token: this.$store.state.userToken } })
       .then((response: AxiosResponse<iUser>) => {
         this.$emit("success");
       })

@@ -16,8 +16,8 @@ export class ToDoController extends DefaultController {
       const todoRepo = getRepository(ToDo);
       const todo = new ToDo();
       this.getUser(req).then((user: User) => {
-        todo.dueDate = req.body.dueDate;
-        todo.title = req.body.title;
+        todo.dueDate = req.body.duedate;
+        todo.title = req.body.item;
         todo.user = user;
         todoRepo.save(todo).then((savedTodo: ToDo) => {
           res.status(200).send({ todo });
@@ -25,8 +25,8 @@ export class ToDoController extends DefaultController {
       });
     }).get((req: Request, res: Response) => {
         this.getUser(req).then((user: User) => {
-          const todoRepo = getRepository(ToDo);
-          todoRepo.find({where: {userId: user.id}}).then((todos: ToDo[]) =>{
+            const todoRepo = getRepository(ToDo);
+            todoRepo.find({ where: { userId: user.id } }).then((todos: ToDo[]) => {
             res.send({todos});
           })
         })
@@ -46,8 +46,10 @@ export class ToDoController extends DefaultController {
 
   protected getUser(req: Request): Promise<User> {
     const token = req.get("token");
-    const sessionRepo = getRepository(Session);
-    return sessionRepo.findOneOrFail(token).then((foundSession: Session | undefined) => {
+      const sessionRepo = getRepository(Session);
+     
+      return sessionRepo.findOneOrFail(token, { relations: ["user"] }).then((foundSession: Session | undefined) => {
+          console.log("session", foundSession);
       return foundSession!.user;
     })
   }
