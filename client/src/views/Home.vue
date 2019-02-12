@@ -31,7 +31,7 @@
         <div class="tile is-child box">
           <p class="title">Announcement</p>
         </div>
-        <div class="tile is-child box">
+        <div class="tile is-child">
           <p class="title">Featured</p>
         </div>
       </div>
