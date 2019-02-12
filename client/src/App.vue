@@ -111,12 +111,22 @@ export default class App extends Vue {
 
 
 <style lang="scss">
+
+$footer-background-color: white !default;
+$footer-padding: 10rem 0rem 0rem !default;
+
+
 @import "~bulma/css/bulma.css";
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.footer {
+  background-color: $footer-background-color;
+  padding: $footer-padding;
 }
 
 .foxcycle-logo-img {
