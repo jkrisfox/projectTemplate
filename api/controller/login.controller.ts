@@ -14,12 +14,12 @@ export class LoginController extends DefaultController {
       const userRepo = getRepository(User);
       const sessionRepo = getRepository(Session);
       userRepo
-        .findOne({ where: { emailAddress } })
+        .findOne({ emailAddress })
         .then((user: User | undefined) => {
           console.log("found user:", user);
           if (user && user.password === password) {
             sessionRepo
-              .findOne({ where: { userId: user.id } })
+              .findOne({ user })
               .then((session: Session | undefined) => {
                 const expiry = new Date(new Date().getTime() + 60000 * 30);
                 if (!session) {

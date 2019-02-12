@@ -1,5 +1,11 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { 
+  Column, 
+  Entity, 
+  JoinColumn, 
+  ManyToOne, 
+  PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../entity";
+
 @Entity()
 export class ToDo {
   @PrimaryGeneratedColumn()
@@ -8,13 +14,13 @@ export class ToDo {
   @Column()
   public title!: string;
 
-  @Column()
+  @Column({default: false})
   public complete!: boolean;
 
   @Column()
   public dueDate!: Date;
 
-  @OneToOne((type) => User, { cascade: true })
+  @ManyToOne((type) => User, user => user.todos)
   @JoinColumn()
   public user!: User;
 }
