@@ -2,14 +2,14 @@
   <div class="profile columns">
     <div class="profilePhoto column">
       <form enctype="multipart/form-data" novalidate>
-        <div class="profilePhoto">
-          <img :src="profileUrl"/>
+        <div class="itemPhoto">
+          <img :src="imageUrl"/>
         </div>
         <div class="file">
           <label class="file-label">
             <input
               type="file"
-              name="profilePhoto"
+              name="itemPhoto"
               :disabled="isSaving"
               v-on:change="filesChanged"
               accept="image/*"
@@ -20,7 +20,7 @@
                 <font-awesome-icon icon="upload"/>
               </span>
               <span class="file-label">
-                Choose a profile image…
+                Choose an item image…
               </span>
             </span>
           </label>
@@ -28,26 +28,48 @@
         </div>
       </form>
     </div>
-    <div class="profileInfo column">
+    <div class="itemInfo column">
       <div class="field">
-        <label class="label">First Name</label>
+        <label class="label">Product Name:</label>
         <div class="control">
-          <input class="input" type="text" placeholder="first name" v-model="user.firstName">
+          <input class="input" type="text" placeholder="product name" v-model="item.name">
         </div>
       </div>
       <div class="field">
-        <label class="label">Last Name</label>
+        <label class="label">Description:</label>
         <div class="control">
-          <input class="input" type="text" placeholder="last name" v-model="user.lastName">
+          <textarea class="input" type="" placeholder="item description" v-model="item.description"></textarea>
         </div>
       </div>
       <div class="field">
-        <label class="label">Email Address</label>
+        <label class="label">Price:</label>
         <div class="control">
-          <input class="input" type="text" placeholder="email address" v-model="user.emailAddress">
+          <input class="input" type="text" placeholder="email address" v-model="item.price">
         </div>
       </div>
+      <div class="field">
+        <label class="label">Stock/Inventory Count:</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="stock/inventory count" v-model="item.stockCount">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Item Categories/Tags: (separated by ";")</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="item categories/tags" v-model="item.tags">
+        </div>
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" v-bind:checked="item.inStoreOnly">
+            In Store Only
+        </label>
     </div>
+    <div class="buttons">
+              <a class="button is-primary"  v-on:click="addNewItem()">
+                <strong>Add New Item</strong>
+              </a>
+              <a class="button is-light" v-if="!isLoggedIn" v-on:click="cancel()">Cancel</a>
+            </div>
   </div>
 </template>
 
@@ -56,7 +78,7 @@ import axios, { AxiosResponse } from "axios";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { APIConfig } from "@/utils/api.utils";
-import { iUser } from "@/models/user.interface";
+import { iItem } from "@/models/item.interface";
 
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
@@ -64,33 +86,45 @@ const STATUS_SUCCESS = 2;
 const STATUS_FAILED = 3;
 
 @Component
-export default class Profile extends Vue {
+export default class AddNewProduct extends Vue {
   fileCount: number = 0;
   currentStatus: number | null = null;
   uploadError: string | null = null;
   uploadedFile: any = null;
 
-  @Prop({ default: null })
-  user!: iUser | null;
+  item: iItem = {
+    name: "",
+    description: "",
+    price: 0.0,
+    imageUrls: "",
+    stockCount: 0,
+    tags: "",
+    inStoreOnly: false
+  };
 
-  upload(formData: FormData) {
-    if (this.user) {
-      const url = `${APIConfig.url}/users/${this.user.id}`;
+  addNewItem() {
+    // save it
+    this.save(this.item);
+  }
+
+  upload(item: iItem) {
+    if (this.item) {
+      const url = `${APIConfig.url}/items/`;
       return axios
-        .post(url, formData, {
+        .post(url, item, {
           headers: { token: this.$store.state.userToken }
         })
-        .then((res: AxiosResponse<{ user: iUser }>) => {
-          this.$store.dispatch("fetchUser", { userid: res.data.user.id });
+        .then((res: AxiosResponse<{ item: iItem }>) => {
+          alert("New Item added, yay!");
         });
     }
     return Promise.reject({ response: "no user logged in" });
   }
 
-  save(formData: FormData) {
+  save(item: iItem) {
     // upload data to the server
     this.currentStatus = STATUS_SAVING;
-    this.upload(formData)
+    this.upload(item)
       .then(() => {
         this.currentStatus = STATUS_SUCCESS;
       })
@@ -98,24 +132,6 @@ export default class Profile extends Vue {
         this.uploadError = err.response;
         this.currentStatus = STATUS_FAILED;
       });
-  }
-
-  filesChanged(event: any) {
-    const name = event.target.name;
-    const files = event.target.files;
-    this.fileCount = event.target.files.length;
-    // handle file changes
-    const formData = new FormData();
-
-    if (!files.length) return;
-
-    // append the files to FormData
-    Array.from(Array(files.length).keys()).map(x => {
-      formData.append(name, files[x], files[x].name);
-    });
-
-    // save it
-    this.save(formData);
   }
 
   reset() {
@@ -145,9 +161,9 @@ export default class Profile extends Vue {
     return this.currentStatus === STATUS_FAILED;
   }
 
-  get profileUrl(): string {
-    if (this.user) {
-      return APIConfig.buildUrl(`/${this.user.profileUrl}`);
+  get imageUrl(): string {
+    if (this.item) {
+      return APIConfig.buildUrl(`/${this.item.imageUrls}`);
     }
     return "";
   }

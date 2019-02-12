@@ -55,10 +55,9 @@ export default class Signup extends Vue {
   error: string | boolean = false;
 
   success() {
-    debugger;
     this.error = false;
     // this.signup.firstName = "done";
-    console.log('hello');
+    console.log("hello");
     axios
       .post(APIConfig.buildUrl("/users"), {
         ...this.signup
@@ -67,7 +66,6 @@ export default class Signup extends Vue {
         this.$emit("success");
       })
       .catch((errorResponse: any) => {
-        debugger;
         this.error = errorResponse.response.data.reason;
       });
   }

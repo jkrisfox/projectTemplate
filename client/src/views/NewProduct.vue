@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2 class="title is-2">My Profile</h2>
+    <h1>New Product</h1>
     <div class="container">
-      <Profile v-if="user" v-bind:user="user"/>
+      <AddNewProduct v-if="user" v-bind:user="user"/>
     </div>
   </div>
 </template>
@@ -15,10 +15,10 @@ import axios, { AxiosResponse } from "axios";
 import { APIConfig } from "@/utils/api.utils";
 import { iUser } from "@/models/user.interface";
 
-import Profile from "@/components/Profile.vue";
+import AddNewProduct from "@/components/AddNewProduct.vue";
 
-@Component({ components: { Profile } })
-export default class MyProfile extends Vue {
+@Component({ components: { AddNewProduct } })
+export default class NewProduct extends Vue {
   get user() {
     return this.$store.state.user;
   }
