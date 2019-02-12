@@ -8,6 +8,7 @@
             <img class="foxcycle-logo-img" src="./assets/foxcyclelogo.png">
             <p class="foxcycle-logo-text">FoxCycle</p>
           </a>
+            <p class="foxcycle-logo-city">San Luis Obispo, CA</p>
         </div>
         <div class="navbar-start">
           <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link> 
@@ -137,6 +138,18 @@ export default class App extends Vue {
 .fas.fa-shopping-cart {
   margin-right: 25px;
   color: black;
+}
+
+.navbar-start {
+  padding-top: 86px;
+}
+
+.navbar-end {
+  padding-top: 86px;
+}
+
+.foxcycle-logo-city {
+  padding-left: 6px;
 }
 
 </style>
