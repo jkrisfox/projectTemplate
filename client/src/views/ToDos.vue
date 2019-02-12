@@ -2,9 +2,22 @@
   <div class="todos">
     <div>Hi from todos</div>
     <table>
+      <tr>
+        <th>Title</th>
+        <th>Due Date</th>
+        <th>Complete</th>
+      </tr>
       <tr v-for="(todo, index) in mytodos" v-bind:key="index">
         <th>{{todo.title}}</th>
         <th>{{todo.dueDate.toLocaleString().split(',')[0]}}</th>
+        <th>
+          <input 
+            type="checkbox" 
+            :id="todo.id"
+            :checked="todo.complete"
+            v-on:click="editTodoItem" 
+          />
+        </th>
       </tr>
     </table>
     <input class="input" type="text" placeholder="new item" v-model="todo.title"/>
@@ -24,7 +37,8 @@ export default class ToDos extends Vue {
   todo: ToDo = {
     id: undefined,
     title: "",
-    dueDate: undefined
+    dueDate: undefined,
+    complete: false
   };
   mytodos: ToDo[] = [];
   error: string | boolean = false;
@@ -70,8 +84,7 @@ export default class ToDos extends Vue {
     const id = this.mytodos[this.mytodos.length - 1].id;
     axios.delete(APIConfig.buildUrl(`/todos/${id}`), {
       headers: { token: this.$store.state.userToken }
-    })
-    .then((response: AxiosResponse) => {
+    }).then((response: AxiosResponse) => {
       this.mytodos.pop();
       this.$emit("success");
     }).catch((errorResponse: any) => {
@@ -79,12 +92,31 @@ export default class ToDos extends Vue {
       this.error = errorResponse.response.data.reason;
     });
   }
+
+  editTodoItem(event: any) {
+    event.preventDefault();
+    const todo = this.mytodos.find((todo: ToDo) => todo.id == event.target.id);
+    if (!todo) return;
+    axios.patch(APIConfig.buildUrl(`/todos/${event.target.id}`), {
+      complete: !todo.complete
+    }, {
+      headers: { token: this.$store.state.userToken }
+    }).then((response: AxiosResponse) => {
+      todo.complete = response.data.todo.complete;
+      this.$emit("success");
+    }).catch((errorResponse: any) => {
+      console.log("error");
+      console.log(errorResponse);
+      // this.error = errorResponse.response.data.reason;
+    })
+  }
 }
 
 interface ToDo {
   id: number | undefined;
   title: string;
   dueDate: Date | undefined;
+  complete: boolean;
 }
 </script>
 
