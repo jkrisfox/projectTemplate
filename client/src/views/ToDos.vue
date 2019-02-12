@@ -31,7 +31,9 @@ export default class ToDos extends Vue {
 
   mounted() {
     console.log("component has mounted");
-    axios.get(APIConfig.buildUrl("/todos")).then((response: AxiosResponse) => {
+    axios.get(APIConfig.buildUrl("/todos"), {
+      headers: { token: this.$store.state.userToken }
+    }).then((response: AxiosResponse) => {
       const todos = response.data.todos;
       todos.forEach((todo: any) => {
         todo.dueDate = new Date(todo.dueDate);
@@ -39,7 +41,7 @@ export default class ToDos extends Vue {
       this.mytodos = todos;
     }).catch((errorResponse: any) => {
       console.log("error");
-      this.error = errorResponse.response.data.reason;
+      // this.error = errorResponse.response.data.reason;
     });
   }
 
@@ -63,9 +65,12 @@ export default class ToDos extends Vue {
       this.error = errorResponse.response.data.reason;
     });
   }
+
   deleteTodoItem() {
     const id = this.mytodos[this.mytodos.length - 1].id;
-    axios.delete(APIConfig.buildUrl("/todos"))
+    axios.delete(APIConfig.buildUrl(`/todos/${id}`), {
+      headers: { token: this.$store.state.userToken }
+    })
     .then((response: AxiosResponse) => {
       this.mytodos.pop();
       this.$emit("success");
