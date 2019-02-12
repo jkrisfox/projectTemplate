@@ -3,7 +3,7 @@
     <div class="tile is-ancestor">
       <div class="hours tile is-vertical is-parent is-3">
         <div class="tile is-child box">
-          <p class="title">OPEN</p>
+          <p class="title" >OPEN</p>
         </div>
         <div class="tile is-child box">
           <p class="title">Hours</p>
@@ -19,12 +19,15 @@
                 <td></td>
               </tr>
             </table>
-        </div>
-        <div class="location tile is-child box">
-          <a href="https://maps.calpoly.edu/place/bldg-014-0/@35.3084197,-120.6805840,14.1z">
-            14256 Frank Pilling Road, San Luis Obispo, 93407
-          </a>
-        </div>
+            <br>
+            <br>
+            <div class="location tile">
+              
+              <a href="https://maps.calpoly.edu/place/bldg-014-0/@35.3084197,-120.6805840,14.1z">
+                14256 Frank Pilling Road, San Luis Obispo, 93407
+              </a>
+              </div>
+          </div>
       </div>
 
       <div class="announcement tile is-parent is-vertical">
