@@ -33,7 +33,6 @@ export class ToDoController extends DefaultController {
       const token = req.get("token");
       console.log('Post request token:', token);
       const sessionRepo = getRepository(Session);
-      const todoRepo = getRepository(ToDo);
       const todo = new ToDo();
       sessionRepo.findOne(token || "", {relations: ["user"]})
       .then((foundSession: Session | undefined) => {
@@ -45,6 +44,7 @@ export class ToDoController extends DefaultController {
         todo.title = req.body.title;
         todo.dueDate = req.body.dueDate;
         todo.complete = req.body.complete;
+        const todoRepo = getRepository(ToDo);
         todoRepo.save(todo).then((savedTodo: ToDo) => {
           res.status(200).send({ todo });
         });
@@ -83,7 +83,6 @@ export class ToDoController extends DefaultController {
       let token = req.get("token");
       console.log('Delete request token:', token);
       const sessionRepo = getRepository(Session);
-      const todoRepo = getRepository(ToDo);
       sessionRepo.findOne(token || "", {relations: ["user"]})
       .then((foundSession: Session | undefined) => {
         if (!foundSession) {
@@ -91,8 +90,14 @@ export class ToDoController extends DefaultController {
           return;
         }
         const user = foundSession.user;
+        const todoRepo = getRepository(ToDo);
         todoRepo.delete({id: req.params.id, user: user})
-        .then(deleteResult => {
+        .then((deleteResult: any) => {
+          if (deleteResult.raw.affectedRows == 0) {
+            res.status(400)
+            .send(`todo with id ${req.params.id} not found.`);
+            return;
+          }
           res.status(200).send("Success");
         });
       });

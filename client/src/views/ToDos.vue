@@ -53,9 +53,9 @@ export default class ToDos extends Vue {
         todo.dueDate = new Date(todo.dueDate);
       });
       this.mytodos = todos;
-    }).catch((errorResponse: any) => {
-      console.log("error");
-      // this.error = errorResponse.response.data.reason;
+    }).catch((error: any) => {
+      console.log(error.response.data);
+      this.error = error.response.data;
     });
   }
 
@@ -74,9 +74,9 @@ export default class ToDos extends Vue {
       newTodo.dueDate = new Date(newTodo.dueDate);
       this.mytodos.push(newTodo);
       this.$emit("success");
-    }).catch((errorResponse: any) => {
-      console.log("error");
-      this.error = errorResponse.response.data.reason;
+    }).catch((error: any) => {
+      console.log(error.response.data);
+      this.error = error.response.data;
     });
   }
 
@@ -87,9 +87,9 @@ export default class ToDos extends Vue {
     }).then((response: AxiosResponse) => {
       this.mytodos.pop();
       this.$emit("success");
-    }).catch((errorResponse: any) => {
-      console.log("error");
-      this.error = errorResponse.response.data.reason;
+    }).catch((error: any) => {
+      console.log(error.response.data);
+      this.error = error.response.data;
     });
   }
 
@@ -104,10 +104,9 @@ export default class ToDos extends Vue {
     }).then((response: AxiosResponse) => {
       todo.complete = response.data.todo.complete;
       this.$emit("success");
-    }).catch((errorResponse: any) => {
-      console.log("error");
-      console.log(errorResponse);
-      // this.error = errorResponse.response.data.reason;
+    }).catch((error: any) => {
+      console.log(error.response.data);
+      this.error = error.response.data;
     })
   }
 }
