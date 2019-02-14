@@ -51,16 +51,22 @@ export default class ToDos extends Vue {
   };
 
   mytodos: ToDo[] = [{ name: "Laundry", duedate: "1/31/19" }];
+
+  mounted() {
+    axios.get(APIConfig.buildUrl("/todos")).then(response => {
+      this.mytodos = response.data.items;
+    });
+  }
+
   addTodoItem() {
     this.mytodos.push({
       name: this.item.name,
       duedate: this.item.duedate
     });
 
-    axios
-    .post(APIConfig.buildUrl("/todos"), {
+    axios.post(APIConfig.buildUrl("/todos"), {
       ...this.item
-    })
+    });
   }
 }
 
