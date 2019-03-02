@@ -20,4 +20,5 @@ export class User {
   @Column()
   @Index({ unique: true })
   public emailAddress!: string;
+  
 }

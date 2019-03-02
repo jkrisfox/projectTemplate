@@ -1,23 +1,20 @@
 <template>
   <div id="app">
-    <div class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar">
       <div class="navbar-menu">
         <div class="navbar-start">
-          <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link>
-          <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
+            <span class="icon">
+              <router-link to="/cart" exact-active-class="is-active">
+                <i class="fas fa-shopping-cart"></i>
+              </router-link>
+            </span>
             <div class="buttons">
-              <a class="button is-primary" v-if="!isLoggedIn" v-on:click="showSignupModal()">
+              <a class="button is-link" v-if="!isLoggedIn" v-on:click="showSignupModal()">
                 <strong>Sign up</strong>
               </a>
-              <router-link
-                class="button is-text"
-                v-if="isLoggedIn"
-                to="/my-profile"
-                exact-active-class="is-active"
-              >My Profile</router-link>
               <a class="button is-light" v-if="!isLoggedIn" v-on:click="showLoginModal()">Log in</a>
               <a class="button is-light" v-if="isLoggedIn" v-on:click="logout">Log out</a>
             </div>
@@ -42,6 +39,10 @@ import { Component } from "vue-property-decorator";
 import Signup from "@/components/Signup.vue";
 import Login from "@/components/Login.vue";
 import { APIConfig } from "@/utils/api.utils";
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
+
+Vue.use(Buefy)
 
 @Component({
   components: {
@@ -96,6 +97,11 @@ export default class App extends Vue {
 
 
 <style lang="scss">
+
+$footer-background-color: white !default;
+$footer-padding: 10rem 0rem 0rem !default;
+
+
 @import "~bulma/css/bulma.css";
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -103,4 +109,24 @@ export default class App extends Vue {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
+.footer {
+  background-color: $footer-background-color;
+  padding: $footer-padding;
+}
+
+.navbar-start {
+  margin-left: auto;
+}
+
+
+.navbar-start {
+  padding-top: 20px;
+}
+
+.navbar-end {
+  margin-right: auto;
+  padding-top: 20px;
+}
+
 </style>
