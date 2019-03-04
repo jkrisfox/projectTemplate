@@ -2,10 +2,11 @@
   <div id="app">
     <div class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-menu">
-        <div class="navbar-start">
-          <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link>
-          <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
-        </div>
+          <div class="navbar-start">
+              <router-link class="navbar-item is-tab" to="/" exact-active-class="is-active">Home</router-link>
+              <router-link class="navbar-item is-tab" to="/about" exact-active-class="is-active">About</router-link>
+              <router-link class="navbar-item is-tab" to="/todos" exact-active-class="is-active">Todos</router-link>
+          </div>
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">

@@ -1,39 +1,60 @@
-<template>
-  <div class="todos">
-    <div>Hi from todos</div>
 
-    <div v-for="(todo, index) in mytodos" v-bind:key="index">
-      <span>{{ todo.name }}</span>
-      <span>{{ todo.duedate }}</span>
-    </div>
-    <button class="button" v-on:click="addTodoItem">Add</button>
+<template>
+  <div class='todos'>
+    <div>Hi from Todos</div>
+      <div v-for="(todo, index) in mytodos" v-bind:key="index">
+          <span>{{todo.title}}</span>
+          <span>{{todo.dueDate}}</span>
+      </div>
+      <div class="buttons">
+        <a class="button is-primary" v-on:click="showTodoModal()">
+          <strong>Add</strong>
+         </a>
+      </div>
+      <router-view/>
+      <Todo v-bind:is-showing="showTodo" v-on:success="addTodo()" v-on:cancel="cancelTodo()"/>
   </div>
-  
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import axios, { AxiosResponse } from "axios";
+import { APIConfig } from "../utils/api.utils";
+import Vue from 'vue';
 import { Component } from "vue-property-decorator";
-@Component
+import Todo from "../components/Todo.vue";
+
+@Component({
+  components: { Todo }
+})
+
 export default class ToDos extends Vue {
-  mytodos: ToDo[] = [
-    { name: "Tod one", duedate: undefined },
-    { name: "todo two", duedate: undefined },
-    { name: "todo three", duedate: undefined }
-  ];
-  addTodoItem() {
-    this.mytodos.push({
-      name: `todo${new Date().getTime()}`,
-      duedate: undefined
-    });
-  }
+    public showTodo: boolean = false;
+    mytodos: any[] = [];
+    addTodo() {
+        this.refresh();
+      this.showTodo = false;
+    }
+    showTodoModal(){
+      this.showTodo = true;
+    }
+    cancelTodo(){
+      this.showTodo = false;
+    }
+    mounted(){
+        this.refresh();
+    }
+    refresh() {
+      axios.get(APIConfig.buildUrl("/todos"), { headers: { token: this.$store.state.userToken } })
+          .then((res: AxiosResponse<{ todos: any[] }>) => {
+              debugger;
+              this.mytodos = res.data.todos;
+              console.log("mytodos", this);
+      })
+    }
 }
 
-interface ToDo {
-  name: string;
-  duedate: Date | undefined;
+export interface Todos {
+    item: string;
+    duedate: string | undefined;
 }
 </script>
-
-<style scoped>
-</style>
